@@ -1,0 +1,4 @@
+// the configured options and settings for Project
+#define VERSION_MAJOR @Project_VERSION_MAJOR@
+#define VERSION_MINOR @Project_VERSION_MINOR@
+#define BIN_LOCATION "@CMAKE_BINARY_DIR@"
