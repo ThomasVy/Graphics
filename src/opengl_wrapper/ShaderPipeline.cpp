@@ -12,19 +12,20 @@ namespace
 class ShaderPipeline::Impl
 {
 public:
-    Impl()
+    Impl(IFilesystem* filesystem)
     : m_shaderProgram(std::make_unique<ShaderProgram>())
-    , m_vertexShader(std::make_unique<Shader>(VERTEX_SHADER_PATH.data(), GL_VERTEX_SHADER, *m_shaderProgram))
-    , m_fragmentShader(std::make_unique<Shader>(FRAGMENT_SHADER_PATH.data(), GL_FRAGMENT_SHADER, *m_shaderProgram))
+    , m_vertexShader(std::make_unique<Shader>(filesystem, VERTEX_SHADER_PATH.data(), GL_VERTEX_SHADER))
+    , m_fragmentShader(std::make_unique<Shader>(filesystem, FRAGMENT_SHADER_PATH.data(), GL_FRAGMENT_SHADER))
     {
-        ActivateShaderProgram(*m_shaderProgram);
+        m_shaderProgram->AttachShader(*m_vertexShader);
+        m_shaderProgram->AttachShader(*m_fragmentShader);
+        m_shaderProgram->SetActive();
     }
     void Recompile()
     {
-        m_shaderProgram = std::make_unique<ShaderProgram>();
-        m_vertexShader = std::make_unique<Shader>(VERTEX_SHADER_PATH.data(), GL_VERTEX_SHADER, *m_shaderProgram);
-        m_fragmentShader = std::make_unique<Shader>(FRAGMENT_SHADER_PATH.data(), GL_FRAGMENT_SHADER, *m_shaderProgram);
-        ActivateShaderProgram(*m_shaderProgram);
+        m_vertexShader->Recompile();
+        m_fragmentShader->Recompile();
+        m_shaderProgram->SetActive();
     }
 private:
     std::unique_ptr<ShaderProgram> m_shaderProgram;
@@ -33,8 +34,8 @@ private:
 };
 
 
-ShaderPipeline::ShaderPipeline()
-: m_impl{new Impl, [](Impl * impl){delete impl;}}
+ShaderPipeline::ShaderPipeline( IFilesystem* filesystem)
+: m_impl{new Impl(filesystem), [](Impl * impl){delete impl;}}
 {
 }
 

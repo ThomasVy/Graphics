@@ -1,10 +1,11 @@
 #pragma once
 #include <memory>
+#include "filesystem/IFilesystem.h"
 
 class ShaderPipeline
 {
 public:
-    ShaderPipeline();
+    ShaderPipeline( IFilesystem* filesystem );
     void Recompile();
 private:
     class Impl;

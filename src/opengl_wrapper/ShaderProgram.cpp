@@ -2,39 +2,42 @@
 #include "logger/Log.h"
 #include <stdexcept>
 #include <vector>
-void ActivateShaderProgram(const ShaderProgram& shaderProgram)
+#include "Shader.h"
+
+namespace{
+	bool Link(GLuint programId)
+	{
+		GLCALL(glLinkProgram(programId));
+		GLCALL(glValidateProgram(programId));
+		GLint success;
+		GLCALL(glGetProgramiv(programId, GL_LINK_STATUS, &success));
+		if (!success) {
+			GLint logLength;
+			GLCALL(glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength));
+			std::vector<char> log(logLength);
+			GLCALL(glGetProgramInfoLog(programId, logLength, NULL, log.data()));
+
+			logger::Error("SHADER_PROGRAM linking {}\n", log.data());
+			return false;
+		}
+		logger::Info("SHADER_PROGRAM successfully compiled and linked");
+		return true;
+	}
+}
+void ShaderProgram::SetActive() const
 {
-    auto linkSucceed = shaderProgram.Link();
+	const auto linkSucceed = Link(m_program);
     if (!linkSucceed)
         throw std::runtime_error("Shader program failed to link");
-    shaderProgram.UseProgram();
-}
-
-void ShaderProgram::UseProgram() const
-{
 	GLCALL(glUseProgram(m_program));
 }
 
-void ShaderProgram::Attach(GLuint shaderId) const
+void ShaderProgram::AttachShader(const Shader& shader) const
 {
-	GLCALL(glAttachShader(m_program, shaderId));
+	GLCALL(glAttachShader(m_program, shader));
 }
 
-bool ShaderProgram::Link() const
+void ShaderProgram::DetachShader(const Shader& shader) const
 {
-    GLCALL(glLinkProgram(m_program));
-    GLCALL(glValidateProgram(m_program));
-    GLint success;
-	GLCALL(glGetProgramiv(m_program, GL_LINK_STATUS, &success));
-	if (!success) {
-		GLint logLength;
-		GLCALL(glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &logLength));
-		std::vector<char> log(logLength);
-		GLCALL(glGetProgramInfoLog(m_program, logLength, NULL, log.data()));
-
-		logger::Error("SHADER_PROGRAM linking {}\n", log.data());
-		return false;
-	}
-    logger::Info("SHADER_PROGRAM successfully compiled and linked");
-    return true;
+	GLCALL(glDetachShader(m_program, shader));
 }

@@ -14,7 +14,6 @@ namespace logger {
 		std::fflush(stdout);
 	}
 
-
 	template <typename S, typename... Args>
 	void Debug(S &&format_str, Args&&... args) {
 		_log("DEBUG", fmt::color::green , std::forward<S>(format_str), std::forward<Args>(args)...);

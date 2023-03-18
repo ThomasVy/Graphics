@@ -1,13 +1,12 @@
 #include <array>
 #include <vector>
-
 #include <string>
-
 #include "str_utils/StringFormat.h"
 #include "logger/Log.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "opengl_wrapper/ShaderPipeline.h"
+#include "filesystem/IFilesystem.h"
 
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCALL(x) GLClearError();\
@@ -38,6 +37,15 @@ static uint32_t GetArrayByteSize(const std::array<T, Size>& arr)
 {
     return Size*sizeof(T);
 }
+
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_R && action == GLFW_PRESS)
+	{
+		logger::Debug("Yo");
+	}
+}
+
 
 int main()
 {
@@ -94,8 +102,11 @@ int main()
     GLCALL(glEnableVertexAttribArray(0));
     GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), 0));
 
+    glfwSetKeyCallback(window, keyCallback);
+
     {
-        ShaderPipeline shaderPipeline;
+        auto filesystem = GetFilesystem();
+        ShaderPipeline shaderPipeline{filesystem.get()};
         while(!glfwWindowShouldClose(window))
         {
             GLCALL(glClear(GL_COLOR_BUFFER_BIT));

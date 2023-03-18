@@ -1,17 +1,18 @@
 #pragma once
 #include <string>
 #include "GLDebug.h"
-
-class ShaderProgram; 
-
+#include "GLHandle.h"
+#include "filesystem/IFilesystem.h"
 class Shader
 {
 public:
-	Shader(std::string path, GLenum type, const ShaderProgram& shaderProgram);
-	std::string GetPath() const { return m_path; }
-	GLenum GetType() const { return m_type; }
+	Shader(IFilesystem* filesystem, std::string path, GLenum type);
+	void Recompile();
 
+	operator GLuint() const;
 private:
+	IFilesystem* m_filesystem;
 	GLenum m_type;
 	std::string m_path;
+	ShaderHandle m_handle;
 };

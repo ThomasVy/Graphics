@@ -8,11 +8,9 @@ class Shader;
 
 class ShaderProgram {
 public:
-	void UseProgram() const;
-    void Attach(GLuint shaderId) const;
-    bool Link() const;
+	void SetActive() const;
+    void AttachShader(const Shader& shader) const;
+    void DetachShader(const Shader& shader) const;
 private:
 	ShaderProgramHandle m_program;
 };
-
-void ActivateShaderProgram(const ShaderProgram& shaderProgram);

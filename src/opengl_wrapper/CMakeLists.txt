@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.25)
 add_library(opengl_wrapper Shader.cpp GLHandle.cpp GLDebug.cpp ShaderPipeline.cpp ShaderProgram.cpp)
 find_package(GLEW REQUIRED)
 find_package(glfw3 REQUIRED)
-target_link_libraries(opengl_wrapper PRIVATE logger compiler_flags GLEW::GLEW glfw)
+target_link_libraries(opengl_wrapper PRIVATE logger filesystem compiler_flags GLEW::GLEW glfw)
 target_include_directories(opengl_wrapper INTERFACE "${PROJECT_SOURCE_DIR}/include" PRIVATE "${PROJECT_SOURCE_DIR}/include/opengl_wrapper" PUBLIC
 "${PROJECT_BINARY_DIR}")
 
