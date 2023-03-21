@@ -1,7 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import cmake_layout
 
-class TestRecipe(ConanFile):
+class ProjectConanRecipe(ConanFile):
     # Binary configuration
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeToolchain", "CMakeDeps"
@@ -10,6 +10,7 @@ class TestRecipe(ConanFile):
         self.requires("fmt/[~9.1]")
         self.requires("glew/[~2.2]")
         self.requires("glfw/[~3.3]")
+        self.requires("glm/cci.20230113")
 
     def layout(self):
         cmake_layout(self)

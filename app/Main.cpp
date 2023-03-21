@@ -7,36 +7,14 @@
 #include "GLFW/glfw3.h"
 #include "opengl_wrapper/ShaderPipeline.h"
 #include "filesystem/IFilesystem.h"
-
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCALL(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
-
-static void GLClearError()
-{
-    while(glGetError() != GL_NO_ERROR);
-}
-
-static bool GLLogCall(std::string_view function, std::string_view file, int line)
-{
-    if(auto error = glGetError(); error != GL_NO_ERROR){
-        logger::Error("OpenGL error: {} {}:{}({})", function, file, line, error);
-        return false;
-    }
-    return true;
-}
-
+#include "math/MatrixAndVectorMath.h"
+#include "renderer/VertexBuffer.h"
+#include "renderer/IndexBuffer.h"
+#include "renderer/VertexArray.h"
 static void ResizeWindowCallback(GLFWwindow* window, int width, int height)
 {
-    GLCALL(glViewport(0, 0, width, height));
+    glViewport(0, 0, width, height);
 }  
-
-template <typename T, std::size_t Size> 
-static uint32_t GetArrayByteSize(const std::array<T, Size>& arr)
-{
-    return Size*sizeof(T);
-}
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -62,6 +40,7 @@ int main()
         return -1;
     }
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
     auto err = glewInit();
     if (GLEW_OK != err)
     {
@@ -69,7 +48,7 @@ int main()
         glfwTerminate();
         return -1;
     }
-    GLCALL(glViewport(0, 0, 800, 600));
+    glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, ResizeWindowCallback);  
 
     logger::Info("OPENGL Version {}\n", (char*)glGetString(GL_VERSION));
@@ -85,34 +64,35 @@ int main()
         0u,1u,2u,
         2u,3u,0u
     };
-    unsigned int VAO{};
-    GLCALL(glGenVertexArrays(1, &VAO));
-    GLCALL(glBindVertexArray(VAO));
-
-    uint32_t buffer{};
-    GLCALL(glGenBuffers(1, &buffer));
-    GLCALL(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-    GLCALL(glBufferData(GL_ARRAY_BUFFER, GetArrayByteSize(positions), positions.data(), GL_STATIC_DRAW));
-
-    uint32_t ibo{};
-    GLCALL(glGenBuffers(1, &ibo));
-    GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
-    GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, GetArrayByteSize(indices), indices.data(), GL_STATIC_DRAW));
-
-    GLCALL(glEnableVertexAttribArray(0));
-    GLCALL(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float), 0));
 
     glfwSetKeyCallback(window, keyCallback);
-
     {
+        VertexArray va{};
+        VertexBuffer vb{positions.data(), sizeof(float), positions.size()};
+        IndexBuffer ib{indices.data(), indices.size()};
+        VertexBufferLayout layout{};
+        layout.Push<float>(2);
+        va.AddBuffer(vb, layout, ib );
+
         auto filesystem = GetFilesystem();
         ShaderPipeline shaderPipeline{filesystem.get()};
+        float red = 0.0f;
+        float increment = 0.05f;
         while(!glfwWindowShouldClose(window))
         {
-            GLCALL(glClear(GL_COLOR_BUFFER_BIT));
-            GLCALL(glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, nullptr));
+            glClear(GL_COLOR_BUFFER_BIT);
+            shaderPipeline.SetUniform("u_color", my_math::vec4{red, 0.1,0.1, 0});
+            va.Bind();
+            glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, nullptr);
+
+            if (red > 1.0f)
+                increment = -0.05f;
+            else if (red < 0.0f)
+                increment = 0.05f;
+
+            red += increment;
             glfwSwapBuffers(window);
-            glfwPollEvents(); 
+            glfwPollEvents();
         }
     }
     glfwTerminate();

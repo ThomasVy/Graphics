@@ -3,6 +3,7 @@
 #include "GLDebug.h"
 #include "GLHandle.h"
 #include "filesystem/IFilesystem.h"
+
 class Shader
 {
 public:

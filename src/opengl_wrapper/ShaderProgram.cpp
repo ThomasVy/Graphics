@@ -41,3 +41,11 @@ void ShaderProgram::DetachShader(const Shader& shader) const
 {
 	GLCALL(glDetachShader(m_program, shader));
 }
+
+void ShaderProgram::SetUniform(std::string_view uniformName, const my_math::vec4& value)
+{
+	GLCALL(glUseProgram(m_program));
+	GLCALL(int location = glGetUniformLocation(m_program, uniformName.data()););
+	ASSERT(location != -1);
+	GLCALL(glUniform4fv(location, 1, my_math::value_ptr(value)));
+}

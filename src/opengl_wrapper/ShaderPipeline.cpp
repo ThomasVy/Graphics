@@ -2,7 +2,7 @@
 #include "ShaderProgram.h"
 #include "Shader.h"
 #include "Config.h"
-
+#include "logger/Log.h"
 namespace
 {
     constexpr std::string_view VERTEX_SHADER_PATH = BIN_LOCATION "/shaders/shader.vert";
@@ -21,11 +21,17 @@ public:
         m_shaderProgram->AttachShader(*m_fragmentShader);
         m_shaderProgram->SetActive();
     }
+
     void Recompile()
     {
         m_vertexShader->Recompile();
         m_fragmentShader->Recompile();
         m_shaderProgram->SetActive();
+    }
+
+    void SetUniform(std::string_view uniformName, const my_math::vec4 &value)
+    {
+        m_shaderProgram->SetUniform(uniformName, value);
     }
 private:
     std::unique_ptr<ShaderProgram> m_shaderProgram;
@@ -42,4 +48,9 @@ ShaderPipeline::ShaderPipeline( IFilesystem* filesystem)
 void ShaderPipeline::Recompile()
 {
     m_impl->Recompile();
+}
+
+void ShaderPipeline::SetUniform(std::string_view uniformName, const my_math::vec4 &value)
+{
+    m_impl->SetUniform(uniformName, value);
 }
