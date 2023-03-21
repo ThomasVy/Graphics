@@ -14,19 +14,17 @@ class ShaderPipeline::Impl
 public:
     Impl(IFilesystem* filesystem)
     : m_shaderProgram(std::make_unique<ShaderProgram>())
-    , m_vertexShader(std::make_unique<Shader>(filesystem, VERTEX_SHADER_PATH.data(), GL_VERTEX_SHADER))
-    , m_fragmentShader(std::make_unique<Shader>(filesystem, FRAGMENT_SHADER_PATH.data(), GL_FRAGMENT_SHADER))
+    , m_vertexShader(std::make_unique<Shader>(filesystem, VERTEX_SHADER_PATH.data(), ShaderType::Vertex))
+    , m_fragmentShader(std::make_unique<Shader>(filesystem, FRAGMENT_SHADER_PATH.data(), ShaderType::Fragment))
     {
-        m_shaderProgram->AttachShader(*m_vertexShader);
-        m_shaderProgram->AttachShader(*m_fragmentShader);
+        m_shaderProgram->AttachShader(m_vertexShader.get());
+        m_shaderProgram->AttachShader(m_fragmentShader.get());
         m_shaderProgram->SetActive();
     }
 
     void Recompile()
     {
-        m_vertexShader->Recompile();
-        m_fragmentShader->Recompile();
-        m_shaderProgram->SetActive();
+        m_shaderProgram->Recompile();
     }
 
     void SetUniform(std::string_view uniformName, const my_math::vec4 &value)

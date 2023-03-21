@@ -5,7 +5,7 @@
 #include "logger/Log.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "opengl_wrapper/ShaderPipeline.h"
+#include "renderer/ShaderPipeline.h"
 #include "filesystem/IFilesystem.h"
 #include "math/MatrixAndVectorMath.h"
 #include "renderer/VertexBuffer.h"

@@ -1,13 +1,15 @@
 #include "GLDebug.h"
 #include "GL/glew.h"
 #include "logger/Log.h"
-#include <unordered_map>
-static std::unordered_map<uint32_t, std::string_view> ERRORS_LOOKUP ={
-    {0x0500, "GL_INVALID_ENUM"},
-    {0x0501, "GL_INVALID_VALUE"},
-    {0x0502, "GL_INVALID_OPERATION"},
-    {0x0506, "GL_INVALID_FRAMEBUFFER_OPERATION"},
-    {0xFFFFFFFFu, "GL_INVALID_INDEX"}
+#include "common/ConstExprMap.h"
+
+using namespace std::literals::string_view_literals;
+static constexpr std::array ERRORS_LOOKUP ={
+    std::make_pair(0x0500u, "GL_INVALID_ENUM"sv),
+    std::make_pair(0x0501u, "GL_INVALID_VALUE"sv),
+    std::make_pair(0x0502u, "GL_INVALID_OPERATION"sv),
+    std::make_pair(0x0506u, "GL_INVALID_FRAMEBUFFER_OPERATION"sv),
+    std::make_pair(0xFFFFFFFFu, "GL_INVALID_INDEX"sv)
 };
 
 void GLClearError()
@@ -17,11 +19,12 @@ void GLClearError()
 
 bool GLLogCall(std::string_view function, std::string_view file, int line)
 {
+    static constexpr auto LOOKUP_MAP = ConstExprMap{ERRORS_LOOKUP};
     if(auto error = glGetError(); error != GL_NO_ERROR){
         std::string_view errStr = "Uknown";
         try
         {
-            errStr = ERRORS_LOOKUP.at(error);
+            errStr = LOOKUP_MAP.at(error);
         }
         catch(const std::exception&)
         {

@@ -2,9 +2,16 @@
 #include <string>
 #include <vector>
 #include "logger/Log.h"
-
+#include "opengl_wrapper/GLDebug.h"
+#include "common/ConstExprMap.h"
 namespace
 {
+    constexpr std::array SHADERTYPE_TO_OPENGLENUM{
+        std::make_pair<ShaderType, uint32_t>(ShaderType::Fragment, GL_FRAGMENT_SHADER),
+        std::make_pair<ShaderType, uint32_t>(ShaderType::Vertex, GL_VERTEX_SHADER)
+    };
+    
+    constexpr auto ENUM_LOOKUP = ConstExprMap(SHADERTYPE_TO_OPENGLENUM);
     bool CompileShader(const char * shaderSource, GLuint shaderId) {
 
         // compile shader
@@ -26,13 +33,20 @@ namespace
         return success;
     }
 }
-Shader::Shader(IFilesystem* filesystem, std::string path, GLenum type)
+
+Shader::Shader(IFilesystem* filesystem, std::string path, ShaderType type)
     : m_filesystem(filesystem)
-    , m_type(type)
 	, m_path(std::move(path))
-    , m_handle(m_type)
+    , m_shaderId{0}
 {
+    auto glType = ENUM_LOOKUP.at(type);
+    GLCALL(m_shaderId = glCreateShader(glType));
     Recompile();
+}
+
+Shader::~Shader()
+{
+    GLCALL(glDeleteShader(m_shaderId));
 }
 
 void Shader::Recompile()
@@ -40,7 +54,7 @@ void Shader::Recompile()
     try
     {
         auto shaderSource = m_filesystem->ReadFile(m_path);
-        CompileShader(shaderSource.c_str(), m_handle);
+        CompileShader(shaderSource.c_str(), m_shaderId);
     }
     catch(std::exception&)
     {
@@ -48,7 +62,7 @@ void Shader::Recompile()
     }
 }
 
-Shader::operator GLuint() const
+uint32_t Shader::GetShaderId() const
 {
-    return m_handle;
+    return m_shaderId;
 }
