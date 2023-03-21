@@ -12,7 +12,9 @@ public:
     ShaderProgram();
     ~ShaderProgram();
 
-	void SetActive() const;
+    void Bind() const;
+    void Unbind() const;
+	void LinkAndValidate() const;
     void AttachShader(Shader* shader);
     void DetachShader(Shader* shader);
     void Recompile();

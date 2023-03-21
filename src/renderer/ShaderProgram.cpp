@@ -24,7 +24,7 @@ namespace{
 		return true;
 	}
 }
-void ShaderProgram::SetActive() const
+void ShaderProgram::LinkAndValidate() const
 {
 	const auto linkSucceed = Link(m_programId);
     if (!linkSucceed)
@@ -52,7 +52,17 @@ void ShaderProgram::SetUniform(std::string_view uniformName, const my_math::vec4
 
 ShaderProgram::~ShaderProgram()
 {
-	glDeleteProgram(m_programId);
+	GLCALL(glDeleteProgram(m_programId));
+}
+
+void ShaderProgram::Bind() const
+{
+	GLCALL(glUseProgram(m_programId));
+}
+
+void ShaderProgram::Unbind() const
+{
+	GLCALL(glUseProgram(0));
 }
 
 ShaderProgram::ShaderProgram()
@@ -78,6 +88,6 @@ void ShaderProgram::Recompile()
 	{
 		shader->Recompile();
 	}
-	SetActive();
+	LinkAndValidate();
 }
 

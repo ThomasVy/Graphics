@@ -5,12 +5,14 @@
 #include "logger/Log.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "renderer/ShaderPipeline.h"
 #include "filesystem/IFilesystem.h"
 #include "math/MatrixAndVectorMath.h"
+#include "renderer/ShaderPipeline.h"
 #include "renderer/VertexBuffer.h"
 #include "renderer/IndexBuffer.h"
 #include "renderer/VertexArray.h"
+#include "renderer/Renderer.h"
+
 static void ResizeWindowCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -76,14 +78,14 @@ int main()
 
         auto filesystem = GetFilesystem();
         ShaderPipeline shaderPipeline{filesystem.get()};
+        Renderer renderer{};
         float red = 0.0f;
         float increment = 0.05f;
         while(!glfwWindowShouldClose(window))
         {
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.Clear();
             shaderPipeline.SetUniform("u_color", my_math::vec4{red, 0.1,0.1, 0});
-            va.Bind();
-            glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, nullptr);
+            renderer.Draw(va, ib, shaderPipeline);
 
             if (red > 1.0f)
                 increment = -0.05f;

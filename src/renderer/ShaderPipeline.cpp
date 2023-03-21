@@ -19,7 +19,7 @@ public:
     {
         m_shaderProgram->AttachShader(m_vertexShader.get());
         m_shaderProgram->AttachShader(m_fragmentShader.get());
-        m_shaderProgram->SetActive();
+        m_shaderProgram->LinkAndValidate();
     }
 
     void Recompile()
@@ -31,6 +31,17 @@ public:
     {
         m_shaderProgram->SetUniform(uniformName, value);
     }
+
+    void Bind() const
+    {
+        m_shaderProgram->Bind();
+    }
+
+    void Unbind() const
+    {
+        m_shaderProgram->Unbind();
+    }
+
 private:
     std::unique_ptr<ShaderProgram> m_shaderProgram;
     std::unique_ptr<Shader> m_vertexShader;
@@ -51,4 +62,14 @@ void ShaderPipeline::Recompile()
 void ShaderPipeline::SetUniform(std::string_view uniformName, const my_math::vec4 &value)
 {
     m_impl->SetUniform(uniformName, value);
+}
+
+void ShaderPipeline::UnBind() const
+{
+    m_impl->Unbind();
+}
+
+void ShaderPipeline::Bind() const
+{
+    m_impl->Bind();
 }

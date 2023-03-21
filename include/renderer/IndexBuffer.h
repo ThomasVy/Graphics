@@ -7,6 +7,8 @@ public:
 	~IndexBuffer();
 	void Bind() const;
     void Unbind() const;
+
+	uint32_t GetCount() const;
 private:
 	uint32_t m_bufferID;
 	size_t m_count;
