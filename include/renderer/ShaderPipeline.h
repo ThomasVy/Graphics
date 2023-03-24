@@ -9,6 +9,7 @@ public:
     ShaderPipeline( IFilesystem* filesystem );
     void Recompile();
     void SetUniform(std::string_view uniformName, const my_math::vec4& value );
+    void SetUniform(std::string_view uniformName, int value );
     void Bind() const;
     void UnBind() const;
 private:

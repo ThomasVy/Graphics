@@ -11,6 +11,7 @@ class ProjectConanRecipe(ConanFile):
         self.requires("glew/[~2.2]")
         self.requires("glfw/[~3.3]")
         self.requires("glm/cci.20230113")
+        self.requires("stb/cci.20220909")
 
     def layout(self):
         cmake_layout(self)

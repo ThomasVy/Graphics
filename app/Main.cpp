@@ -12,6 +12,8 @@
 #include "renderer/IndexBuffer.h"
 #include "renderer/VertexArray.h"
 #include "renderer/Renderer.h"
+#include "renderer/Texture.h"
+#include "Config.h"
 
 static void ResizeWindowCallback(GLFWwindow* window, int width, int height)
 {
@@ -56,17 +58,18 @@ int main()
     logger::Info("OPENGL Version {}\n", (char*)glGetString(GL_VERSION));
 
     std::array positions{
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.5f, 0.5f,
-        -0.5f, 0.5f
+        -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.0f, 1.0f
     };
 
     std::array indices{
         0u,1u,2u,
         2u,3u,0u
     };
-
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     glfwSetKeyCallback(window, keyCallback);
     {
         VertexArray va{};
@@ -74,25 +77,19 @@ int main()
         IndexBuffer ib{indices.data(), indices.size()};
         VertexBufferLayout layout{};
         layout.Push<float>(2);
+        layout.Push<float>(2);
         va.AddBuffer(vb, layout, ib );
 
         auto filesystem = GetFilesystem();
         ShaderPipeline shaderPipeline{filesystem.get()};
+        Texture texture{BIN_LOCATION "/textures/ship.png"};
+        texture.Bind();
+        shaderPipeline.SetUniform("u_texture", 0);
         Renderer renderer{};
-        float red = 0.0f;
-        float increment = 0.05f;
         while(!glfwWindowShouldClose(window))
         {
             renderer.Clear();
-            shaderPipeline.SetUniform("u_color", my_math::vec4{red, 0.1,0.1, 0});
             renderer.Draw(va, ib, shaderPipeline);
-
-            if (red > 1.0f)
-                increment = -0.05f;
-            else if (red < 0.0f)
-                increment = 0.05f;
-
-            red += increment;
             glfwSwapBuffers(window);
             glfwPollEvents();
         }

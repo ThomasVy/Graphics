@@ -19,6 +19,7 @@ public:
     void DetachShader(Shader* shader);
     void Recompile();
     void SetUniform(std::string_view uniformName, const my_math::vec4& value);
+    void SetUniform(std::string_view uniformName, const int value);
 private:
     int GetUniformLocation(const std::string& uniformName);
 

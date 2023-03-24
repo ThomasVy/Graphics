@@ -49,6 +49,11 @@ void ShaderProgram::SetUniform(std::string_view uniformName, const my_math::vec4
 	GLCALL(glUniform4fv(GetUniformLocation(uniformName.data()), 1, my_math::value_ptr(value)));
 }
 
+void ShaderProgram::SetUniform(std::string_view uniformName, const int value)
+{
+	GLCALL(glUniform1i(GetUniformLocation(uniformName.data()), value));
+}
+
 
 ShaderProgram::~ShaderProgram()
 {

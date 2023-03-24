@@ -32,6 +32,11 @@ public:
         m_shaderProgram->SetUniform(uniformName, value);
     }
 
+    void SetUniform(std::string_view uniformName, int value)
+    {
+        m_shaderProgram->SetUniform(uniformName, value);
+    }
+
     void Bind() const
     {
         m_shaderProgram->Bind();
@@ -72,4 +77,9 @@ void ShaderPipeline::UnBind() const
 void ShaderPipeline::Bind() const
 {
     m_impl->Bind();
+}
+
+void ShaderPipeline::SetUniform(std::string_view uniformName, int value)
+{
+    m_impl->SetUniform(uniformName, value);
 }
