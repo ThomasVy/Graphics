@@ -72,12 +72,17 @@ int main()
     glEnable(GL_BLEND);
     glfwSetKeyCallback(window, keyCallback);
     {
+        my_math::mat4 proj = my_math::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+        //my_math::mat4 view = my_math::translate(my_math::mat4(1.0f), my_math::vec3(-100, 0, 0));
+        //my_math::mat4 model = my_math::translate(my_math::mat4{1.0f}, my_math::vec3(200, 200, 0));
+        auto mvp = proj; // * view * model; //backwards because of column ordering in glm
+        
         VertexArray va{};
         VertexBuffer vb{positions.data(), sizeof(float), positions.size()};
         IndexBuffer ib{indices.data(), indices.size()};
         VertexBufferLayout layout{};
-        layout.Push<float>(2);
-        layout.Push<float>(2);
+        layout.Push<float>(2); //positions
+        layout.Push<float>(2); //texture positions
         va.AddBuffer(vb, layout, ib );
 
         auto filesystem = GetFilesystem();
@@ -85,6 +90,7 @@ int main()
         Texture texture{BIN_LOCATION "/textures/ship.png"};
         texture.Bind();
         shaderPipeline.SetUniform("u_texture", 0);
+        shaderPipeline.SetUniform("u_MVP", mvp);
         Renderer renderer{};
         while(!glfwWindowShouldClose(window))
         {

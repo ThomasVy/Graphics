@@ -2,17 +2,23 @@
 #include <memory>
 #include "filesystem/IFilesystem.h"
 #include "math/MatrixAndVectorMath.h"
+#include "ShaderProgram.h"
+#include "Shader.h"
 
 class ShaderPipeline
 {
 public:
     ShaderPipeline( IFilesystem* filesystem );
     void Recompile();
-    void SetUniform(std::string_view uniformName, const my_math::vec4& value );
-    void SetUniform(std::string_view uniformName, int value );
     void Bind() const;
-    void UnBind() const;
+    void Unbind() const;
+    template <typename T>
+    void SetUniform(std::string_view uniformName, const T& value)
+    {
+        m_shaderProgram->SetUniform(uniformName, value);
+    }
 private:
-    class Impl;
-    std::unique_ptr<Impl, void (*)(Impl *)> m_impl;
+    std::unique_ptr<ShaderProgram> m_shaderProgram;
+    std::unique_ptr<Shader> m_vertexShader;
+    std::unique_ptr<Shader> m_fragmentShader;
 };

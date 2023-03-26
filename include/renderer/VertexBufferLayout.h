@@ -2,6 +2,7 @@
 #include <cstdint> 
 #include <vector>
 #include <gl/glew.h>
+#include <stdexcept>
 
 struct VertexBufferElements // probably should use my own types and convert it later
 {
@@ -21,7 +22,7 @@ public:
     template<typename T> 
     void Push(uint32_t count)
     {
-        //static_assert(false);
+        std::runtime_error("Generic version should not be called");
     }
 
     template<> 

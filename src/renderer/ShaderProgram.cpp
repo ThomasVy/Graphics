@@ -2,7 +2,6 @@
 #include "logger/Log.h"
 #include <stdexcept>
 #include "Shader.h"
-#include "opengl_wrapper/GLDebug.h"
 
 namespace{
 	bool Link(GLuint programId)
@@ -43,17 +42,6 @@ void ShaderProgram::DetachShader(Shader* shader)
 	std::erase(m_shaders, shader);
 	GLCALL(glDetachShader(m_programId, shader->GetShaderId()));
 }
-
-void ShaderProgram::SetUniform(std::string_view uniformName, const my_math::vec4& value)
-{
-	GLCALL(glUniform4fv(GetUniformLocation(uniformName.data()), 1, my_math::value_ptr(value)));
-}
-
-void ShaderProgram::SetUniform(std::string_view uniformName, const int value)
-{
-	GLCALL(glUniform1i(GetUniformLocation(uniformName.data()), value));
-}
-
 
 ShaderProgram::~ShaderProgram()
 {
