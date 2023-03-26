@@ -21,7 +21,7 @@ int main()
     int width = 800;
     auto filesystem = GetFilesystem();
     auto window = window_context::GetWindow(width, height, "LearnOpenGL");
-    auto graphics = graphics::GetGraphicsApi(graphics::GraphicsType::OpenGL, width, height); 
+    auto graphics = graphics_api::GetGraphicsApi(graphics_api::GraphicsType::OpenGL, width, height); 
     std::array vertices{
         -0.5f, -0.5f, 0.0f, 0.0f,
         0.5f, -0.5f, 1.0f, 0.0f,
@@ -39,8 +39,8 @@ int main()
     auto mvp = proj * view * model; //backwards because of column ordering in glm
     
     VertexArray va{};
-    VertexBuffer vb{vertices.data(), sizeof(float), vertices.size()};
-    IndexBuffer ib{indices.data(), indices.size()};
+    VertexBuffer vb{vertices.data(), sizeof(float), vertices.size(), graphics.get()};
+    IndexBuffer ib{indices.data(), indices.size(), graphics.get()};
     VertexBufferLayout layout{};
     layout.Push<float>(2); //positions
     layout.Push<float>(2); //texture positions
@@ -50,11 +50,11 @@ int main()
     texture.Bind();
     shaderPipeline.SetUniform("u_texture", 0);
     shaderPipeline.SetUniform("u_MVP", mvp);
-    Renderer renderer{};
+    Renderer renderer{graphics.get()};
     while(!window->ShouldClose())
     {
         renderer.Clear();
-        renderer.Draw(va, ib, shaderPipeline);
+        renderer.Draw(vb, ib, shaderPipeline);
         window->SwapBuffers();
         window->PollEvents();
     }

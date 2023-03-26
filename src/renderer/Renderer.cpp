@@ -1,16 +1,17 @@
 #include "Renderer.h"
-#include "graphics_api/opengl_wrapper/GLDebug.h"
 
-void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const ShaderPipeline& shaderPipeline) const
+Renderer::Renderer(graphics_api::IGraphicsApi* graphicsApi)
+    : m_graphicsApi{graphicsApi}
 {
-    vertexArray.Bind();
-    indexBuffer.Bind();
-    shaderPipeline.Bind();
+}
 
-    GLCALL(glDrawElements(GL_TRIANGLES, indexBuffer.GetCount(), GL_UNSIGNED_INT, nullptr));
+
+void Renderer::Draw(const VertexBuffer& vertexBuffer, const IndexBuffer& indexBuffer, const ShaderPipeline& shaderPipeline) const
+{
+    m_graphicsApi->Draw(vertexBuffer.GetId(), indexBuffer.GetId(), indexBuffer.GetCount());
 }
 
 void Renderer::Clear() const
 {
-    GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+    m_graphicsApi->Clear();
 }
