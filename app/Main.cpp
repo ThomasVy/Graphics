@@ -12,7 +12,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/Texture.h"
 #include "Config.h"
-#include "graphics/IGraphicsApi.h"
+#include "graphics_api/IGraphicsApi.h"
 #include "window_context/IWindow.h"
 
 int main()

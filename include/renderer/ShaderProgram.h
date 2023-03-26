@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <stdexcept>
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 #include "math/MatrixAndVectorMath.h"
 
 class Shader;

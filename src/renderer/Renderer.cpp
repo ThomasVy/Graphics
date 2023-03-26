@@ -1,5 +1,5 @@
 #include "Renderer.h"
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 
 void Renderer::Draw(const VertexArray& vertexArray, const IndexBuffer& indexBuffer, const ShaderPipeline& shaderPipeline) const
 {

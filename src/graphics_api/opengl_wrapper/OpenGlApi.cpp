@@ -1,5 +1,5 @@
 #include "OpenGlApi.h"
-#include "GL/glew.h"
+#include "GLDebug.h"
 #include "logger/Log.h"
 #include <stdexcept>
 
@@ -13,9 +13,9 @@ namespace graphics
             logger::Error("Failed to initialize GLEW");
             std::runtime_error("Failed to initialize GLEW");
         }
-        glViewport(0, 0, width, height);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
+        GLCALL(glViewport(0, 0, width, height));
+        GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        GLCALL(glEnable(GL_BLEND));
         logger::Info("OPENGL Version {}\n", (char*)glGetString(GL_VERSION));
     }
 }

@@ -1,6 +1,6 @@
 #include "IndexBuffer.h"
 #include "math/MatrixAndVectorMath.h"
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 
 IndexBuffer::IndexBuffer(const uint32_t* data, size_t count)
 	: m_bufferID{}

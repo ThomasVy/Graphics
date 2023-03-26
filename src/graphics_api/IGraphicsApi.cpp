@@ -1,5 +1,5 @@
 #include "IGraphicsApi.h"
-#include "OpenGlApi.h"
+#include "opengl_wrapper/OpenGlApi.h"
 #include "logger/Log.h"
 std::unique_ptr<graphics::IGraphicsApi> graphics::GetGraphicsApi(graphics::GraphicsType graphics, const int width, const int height)
 {

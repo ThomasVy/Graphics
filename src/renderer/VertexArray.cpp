@@ -1,5 +1,5 @@
 #include "VertexArray.h"
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 VertexArray::VertexArray()
     : m_rendererId{}
 {

@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "logger/Log.h"
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 #include "common/ConstExprMap.h"
 namespace
 {
