@@ -7,15 +7,13 @@ namespace graphics
     class IGraphicsApi
     {
     public:
-        virtual ~IGraphicsApi() = 0;
+        virtual ~IGraphicsApi() = default;
     protected:
         IGraphicsApi& operator=(const IGraphicsApi&) = default; 
     };
-    inline IGraphicsApi::~IGraphicsApi() {}
-
     enum class GraphicsType
     {
         OpenGL
     };
-    std::unique_ptr<IGraphicsApi> GetGraphicsApi(GraphicsType graphics);
+    std::unique_ptr<IGraphicsApi> GetGraphicsApi(GraphicsType graphics, const int width, const int height);
 }

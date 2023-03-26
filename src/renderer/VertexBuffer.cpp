@@ -1,7 +1,6 @@
 #include "VertexBuffer.h"
 #include "math/MatrixAndVectorMath.h"
 #include "opengl_wrapper/GLDebug.h"
-
 VertexBuffer::VertexBuffer(const void* data, uint32_t typeSize, size_t count)
 {
     GLCALL(glGenBuffers(1, &m_bufferID));

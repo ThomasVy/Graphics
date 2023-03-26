@@ -19,7 +19,6 @@ namespace{
 			logger::Error("SHADER_PROGRAM linking {}\n", log.data());
 			return false;
 		}
-		logger::Info("SHADER_PROGRAM successfully compiled and linked");
 		return true;
 	}
 }
