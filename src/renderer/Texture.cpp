@@ -1,6 +1,6 @@
 #include "Texture.h"
 #include <string>
-#include "opengl_wrapper/GLDebug.h"
+#include "graphics_api/opengl_wrapper/GLDebug.h"
 #include "logger/Log.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STBI_FAILURE_USERMSG
