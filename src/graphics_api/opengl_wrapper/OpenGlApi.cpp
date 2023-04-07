@@ -68,9 +68,8 @@ namespace graphics_api
         GLCALL(glBufferData(type, size, data, GL_STATIC_DRAW));
     }
     
-    void OpenGlApi::Draw(uint32_t vertexBufferId, uint32_t indexBufferId, uint32_t indexCount) const 
+    void OpenGlApi::Draw(uint32_t indexBufferId, uint32_t indexCount) const 
     {
-        GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufferId));
         GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId));
         GLCALL(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
     }

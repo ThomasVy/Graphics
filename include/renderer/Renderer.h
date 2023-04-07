@@ -11,9 +11,10 @@ public:
     void Clear() const;
 
     template<typename T>
-    void Draw(const VertexBuffer<T>& vertexBuffer, const IndexBuffer& indexBuffer, const ShaderPipeline& shaderPipeline) const
+    void Draw(const VertexBuffer<T>& vertexBuffer, const IndexBuffer& indexBuffer) const
     {
-        m_graphicsApi->Draw(vertexBuffer.GetId(), indexBuffer.GetId(), indexBuffer.GetCount());
+        vertexBuffer.Bind();
+        m_graphicsApi->Draw(indexBuffer.GetId(), indexBuffer.GetCount());
     }
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;

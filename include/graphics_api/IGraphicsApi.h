@@ -20,7 +20,7 @@ namespace graphics_api
         virtual ~IGraphicsApi() = default;
         virtual uint32_t GenerateBuffers() const = 0;
         virtual void UploadBufferData(uint32_t bufferId, const void * data, uint64_t size, BufferType bufferType) const = 0;
-        virtual void Draw(uint32_t vertexBufferId, uint32_t indexBufferId, uint32_t indexCount) const = 0;
+        virtual void Draw(uint32_t indexBufferId, uint32_t indexCount) const = 0;
         virtual void DeleteBuffer(uint32_t bufferId) const = 0;
         virtual void Clear() const = 0;
         virtual void SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride) const = 0;

@@ -49,7 +49,7 @@ int main()
     while(!window->ShouldClose())
     {
         renderer.Clear();
-        renderer.Draw(vb, ib, shaderPipeline);
+        renderer.Draw(vb, ib);
         window->SwapBuffers();
         window->PollEvents();
     }

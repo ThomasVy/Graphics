@@ -15,12 +15,6 @@ public:
 	    : m_graphicsApi{graphicsApi}
     	, m_bufferID{m_graphicsApi->GenerateBuffers()}
 	{
-		const auto layout = T::GetLayout();
-		for (auto i = 0u; i < layout.size(); ++i)
-		{
-			const auto &element = layout[i];
-			m_graphicsApi->SetBufferLayout(m_bufferID, i, element, sizeof(T));
-		}
 	}
     ~VertexBuffer()
 	{
@@ -31,7 +25,17 @@ public:
 	{
 		m_graphicsApi->UploadBufferData(m_bufferID, data.data(), data.size_bytes(), graphics_api::IGraphicsApi::BufferType::Vertex);
 	}
-
+	
+	void Bind() const
+	{
+		const auto layout = T::GetLayout();
+		for (auto i = 0u; i < layout.size(); ++i)
+		{
+			const auto &element = layout[i];
+			m_graphicsApi->SetBufferLayout(m_bufferID, i, element, sizeof(T));
+		}
+	}
+	
 	uint32_t GetId() const { return m_bufferID;}
 
 private:
