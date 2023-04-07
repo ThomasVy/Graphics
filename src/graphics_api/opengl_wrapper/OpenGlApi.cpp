@@ -3,8 +3,13 @@
 #include "logger/Log.h"
 #include <stdexcept>
 #include "common/ConstExprMap.h"
-
+#include <vector>
+#include "Config.h"
 namespace {
+
+    constexpr std::string_view VERTEX_SHADER_PATH = BIN_LOCATION "/shaders/shader.vert";
+    constexpr std::string_view FRAGMENT_SHADER_PATH = BIN_LOCATION "/shaders/shader.frag";
+
     constexpr std::array BUFFER_TYPE_TO_OPENGL{
         std::make_pair(graphics_api::IGraphicsApi::BufferType::Index, GL_ELEMENT_ARRAY_BUFFER),
         std::make_pair(graphics_api::IGraphicsApi::BufferType::Vertex, GL_ARRAY_BUFFER)
@@ -16,12 +21,19 @@ namespace {
         std::make_pair(graphics_api::DataType::Float, GL_FLOAT)
     };
     constexpr common::ConstExprMap DATA_TYPE_LOOKUP{DATA_TYPE_TO_OPENGL};
+
+    constexpr std::array SHADERTYPE_TO_OPENGLENUM{
+        std::make_pair(graphics_api::IGraphicsApi::ShaderType::Fragment, GL_FRAGMENT_SHADER),
+        std::make_pair(graphics_api::IGraphicsApi::ShaderType::Vertex, GL_VERTEX_SHADER)
+    };
+    constexpr common::ConstExprMap SHADERTYPE_ENUM_LOOKUP{SHADERTYPE_TO_OPENGLENUM};
 }
 
 namespace graphics_api
 {
-    OpenGlApi::OpenGlApi(const int width, const int height)
+    OpenGlApi::OpenGlApi(IFilesystem* filesystem, const int width, const int height)
         : m_vertexArray{0}
+        , m_filesystem(filesystem)
     {
         auto err = glewInit();
         if (err != GLEW_OK)
@@ -102,5 +114,92 @@ namespace graphics_api
                 GLCALL(glUniform1iv(location, count, static_cast<const GLint*>(value)));
                 break;
         }
+    }
+    
+    uint32_t OpenGlApi::GenerateShader(ShaderType shaderType) const
+    {
+        uint32_t shaderId = 0;
+        auto glType = SHADERTYPE_ENUM_LOOKUP.at(shaderType);
+        GLCALL(shaderId = glCreateShader(glType));
+        return shaderId;
+    }
+    
+    void OpenGlApi::DeleteShader(uint32_t shaderId) const
+    {
+        GLCALL(glDeleteShader(shaderId));
+    }
+    
+    void OpenGlApi::CompileShader(uint32_t shaderId, std::string_view shaderSource) const
+    {
+        // compile shader
+        const char* data = shaderSource.data();
+        GLCALL(glShaderSource(shaderId, 1, &data, NULL));
+        GLCALL(glCompileShader(shaderId));
+
+        // check for errors
+        GLint success;
+        GLCALL(glGetShaderiv(shaderId, GL_COMPILE_STATUS, &success));
+
+        if (!success) {
+            GLint logLength;
+            GLCALL(glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logLength));
+            std::vector<char> log(logLength);
+            GLCALL(glGetShaderInfoLog(shaderId, logLength, NULL, log.data()));
+
+            logger::Error("SHADER compiling Failed:\n{}", log.data());
+        }
+    }
+    
+    uint32_t OpenGlApi::CreateShaderProgram() const
+    {
+        uint32_t shaderProgramId = 0;
+        GLCALL(shaderProgramId = glCreateProgram());
+        return shaderProgramId;
+    }
+    
+    void OpenGlApi::DeleteShaderProgram(uint32_t shaderProgramId) const
+    {
+        GLCALL(glDeleteProgram(shaderProgramId));
+    }
+    
+    void OpenGlApi::LinkShaders(uint32_t shaderProgramId, const std::vector<uint32_t>& shaderIds) const
+    {
+        for (const auto shaderId : shaderIds)
+        {
+            GLCALL(glAttachShader(shaderProgramId, shaderId));
+        }
+        GLCALL(glLinkProgram(shaderProgramId));
+		GLCALL(glValidateProgram(shaderProgramId));
+		GLint success;
+		GLCALL(glGetProgramiv(shaderProgramId, GL_LINK_STATUS, &success));
+		if (!success) {
+			GLint logLength;
+			GLCALL(glGetProgramiv(shaderProgramId, GL_INFO_LOG_LENGTH, &logLength));
+			std::vector<char> log(logLength);
+			GLCALL(glGetProgramInfoLog(shaderProgramId, logLength, NULL, log.data()));
+
+			logger::Error("SHADER_PROGRAM linking {}\n", log.data());
+            return;
+		}
+        GLCALL(glUseProgram(shaderProgramId));
+    }
+    
+    std::optional<std::string> OpenGlApi::ReadShaderSourceFile(ShaderType shaderType)
+    {
+        std::string_view filePath;
+        switch (shaderType)
+        {
+            case ShaderType::Fragment:
+                filePath = FRAGMENT_SHADER_PATH;
+                break;
+            case ShaderType::Vertex:
+                filePath = VERTEX_SHADER_PATH;
+                break;
+            default:
+                logger::Error("Unknown Shader Type passed in");
+                return std::nullopt;
+        }
+        std::optional<std::string> shaderSource = m_filesystem->ReadFile(filePath);        
+        return shaderSource;
     }
 }

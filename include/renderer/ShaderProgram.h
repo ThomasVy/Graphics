@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <vector>
 #include <stdexcept>
-#include "graphics_api/opengl_wrapper/GLDebug.h"
 #include "math/MatrixAndVectorMath.h"
 #include "graphics_api/IGraphicsApi.h"
 
@@ -15,11 +14,8 @@ public:
     ShaderProgram(graphics_api::IGraphicsApi* graphicsApi);
     ~ShaderProgram();
 
-    void Bind() const;
-    void Unbind() const;
 	void LinkAndValidate() const;
     void AttachShader(Shader* shader);
-    void DetachShader(Shader* shader);
     void Recompile();
     template <typename T>
     void SetUniform(std::string_view uniformName, const T* value, uint32_t count)

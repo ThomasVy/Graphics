@@ -3,63 +3,19 @@
 #include <stdexcept>
 #include "Shader.h"
 
-namespace{
-	bool Link(GLuint programId)
-	{
-		GLCALL(glLinkProgram(programId));
-		GLCALL(glValidateProgram(programId));
-		GLint success;
-		GLCALL(glGetProgramiv(programId, GL_LINK_STATUS, &success));
-		if (!success) {
-			GLint logLength;
-			GLCALL(glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &logLength));
-			std::vector<char> log(logLength);
-			GLCALL(glGetProgramInfoLog(programId, logLength, NULL, log.data()));
-
-			logger::Error("SHADER_PROGRAM linking {}\n", log.data());
-			return false;
-		}
-		return true;
-	}
-}
-void ShaderProgram::LinkAndValidate() const
-{
-	const auto linkSucceed = Link(m_programId);
-    if (!linkSucceed)
-        throw std::runtime_error("Shader program failed to link");
-	GLCALL(glUseProgram(m_programId));
-}
-
 void ShaderProgram::AttachShader(Shader* shader)
 {
 	m_shaders.push_back(shader);
-	GLCALL(glAttachShader(m_programId, shader->GetShaderId()));
-}
-
-void ShaderProgram::DetachShader(Shader* shader)
-{
-	std::erase(m_shaders, shader);
-	GLCALL(glDetachShader(m_programId, shader->GetShaderId()));
 }
 
 ShaderProgram::~ShaderProgram()
 {
-	GLCALL(glDeleteProgram(m_programId));
-}
-
-void ShaderProgram::Bind() const
-{
-	GLCALL(glUseProgram(m_programId));
-}
-
-void ShaderProgram::Unbind() const
-{
-	GLCALL(glUseProgram(0));
+	m_graphicsApi->DeleteShaderProgram(m_programId);
 }
 
 ShaderProgram::ShaderProgram(graphics_api::IGraphicsApi* graphicsApi)
 	: m_graphicsApi(graphicsApi)
-	, m_programId(glCreateProgram())
+	, m_programId(m_graphicsApi->CreateShaderProgram())
 {
 }
 
@@ -77,10 +33,13 @@ int ShaderProgram::GetUniformLocation(const std::string& uniformName)
 void ShaderProgram::Recompile()
 {
 	m_locationCache.clear();
-	for (const auto shader : m_shaders)
+	std::vector<uint32_t> shaderIds;
+	shaderIds.reserve(m_shaders.size());
+	for (auto* shader : m_shaders)
 	{
 		shader->Recompile();
+		shaderIds.push_back(shader->GetShaderId());
 	}
-	LinkAndValidate();
+	m_graphicsApi->LinkShaders(m_programId, shaderIds);
 }
 

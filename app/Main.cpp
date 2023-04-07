@@ -21,7 +21,7 @@ int main()
     int width = 800;
     auto filesystem = GetFilesystem();
     auto window = window_context::GetWindow(width, height, "LearnOpenGL");
-    auto graphics = graphics_api::GetGraphicsApi(graphics_api::GraphicsType::OpenGL, width, height); 
+    auto graphics = graphics_api::GetGraphicsApi(filesystem.get(), graphics_api::GraphicsType::OpenGL, width, height); 
     std::array vertices{
         Vertex2DInfo{.positions={-0.5f, -0.5f}, .textureCoordinates={0.0f, 0.0f}},
         Vertex2DInfo{.positions={0.5f, -0.5f}, .textureCoordinates={1.0f, 0.0f}},
@@ -40,7 +40,7 @@ int main()
     vb.UploadData(vertices);
     IndexBuffer ib(graphics.get());
     ib.UploadData(indices);
-    ShaderPipeline shaderPipeline(filesystem.get(), graphics.get());
+    ShaderPipeline shaderPipeline(graphics.get());
     Texture texture(BIN_LOCATION "/textures/ship.png");
     texture.Bind();
     shaderPipeline.SetUniform("u_texture", 0);

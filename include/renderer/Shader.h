@@ -1,24 +1,19 @@
 #pragma once
 #include <string>
 #include "filesystem/IFilesystem.h"
-
-enum class ShaderType
-{
-	Vertex,
-	Fragment
-};
+#include "graphics_api/IGraphicsApi.h"
 
 class Shader
 {
 public:
-	Shader(IFilesystem* filesystem, std::string path, ShaderType type);
+	Shader(graphics_api::IGraphicsApi* graphicsApi, graphics_api::IGraphicsApi::ShaderType type);
 	~Shader();
 
 	void Recompile();
 	uint32_t GetShaderId() const;
 
 private:
-	IFilesystem* m_filesystem;
-	std::string m_path;
+	graphics_api::IGraphicsApi* m_graphicsApi;
 	uint32_t m_shaderId;
+	graphics_api::IGraphicsApi::ShaderType m_type;
 };

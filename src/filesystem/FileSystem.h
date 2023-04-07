@@ -5,5 +5,5 @@
 class Filesystem : public IFilesystem
 {
 public:
-    std::string ReadFile(std::string_view filePath);
+    std::optional<std::string> ReadFile(std::string_view filePath) override;
 };

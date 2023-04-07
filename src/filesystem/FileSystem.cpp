@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include "logger/Log.h"
 
-std::string Filesystem::ReadFile(std::string_view filePath)
+std::optional<std::string> Filesystem::ReadFile(std::string_view filePath)
 {
     try {
         std::ifstream file;
@@ -17,6 +17,6 @@ std::string Filesystem::ReadFile(std::string_view filePath)
     }
     catch (std::ifstream::failure &) {
         logger::Error("Failed to read file {}", filePath);
-        throw std::runtime_error("Could not read file" );
     }
+    return std::nullopt;
 }

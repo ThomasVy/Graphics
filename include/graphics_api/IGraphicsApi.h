@@ -3,6 +3,8 @@
 #include <memory>
 #include "BufferInfo.h"
 #include <string>
+#include <vector>
+#include "filesystem/IFilesystem.h"
 
 namespace graphics_api
 {
@@ -31,12 +33,28 @@ namespace graphics_api
             Int32
         };
         virtual void SetUniform(int location, const void * value, uint32_t count, UniformType type) const = 0;
+
+        enum class ShaderType
+        {
+            Vertex,
+            Fragment
+        };
+        virtual uint32_t GenerateShader(ShaderType shaderType) const = 0;
+        virtual void DeleteShader(uint32_t shaderId) const = 0;
+        virtual void CompileShader(uint32_t shaderId, std::string_view shaderSource) const = 0;
+
+        virtual uint32_t CreateShaderProgram() const = 0;
+        virtual void DeleteShaderProgram(uint32_t shaderProgramId ) const = 0;
+        virtual void LinkShaders(uint32_t shaderProgramId, const std::vector<uint32_t>& shaderIds) const = 0;
+        virtual std::optional<std::string> ReadShaderSourceFile(ShaderType shaderType) = 0;
     protected:
         IGraphicsApi& operator=(const IGraphicsApi&) = default; 
     };
+
+
     enum class GraphicsType
     {
         OpenGL
     };
-    std::unique_ptr<IGraphicsApi> GetGraphicsApi(GraphicsType graphics, const int width, const int height);
+    std::unique_ptr<IGraphicsApi> GetGraphicsApi( IFilesystem* filesystem, GraphicsType graphics, const int width, const int height);
 }
