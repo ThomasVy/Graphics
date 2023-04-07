@@ -17,8 +17,8 @@ uint32_t IndexBuffer::GetCount() const
     return static_cast<uint32_t>(m_count);
 }
 
-void IndexBuffer::UploadData(span<uint32_t> data)
+void IndexBuffer::UploadData(std::span<uint32_t> data)
 {
     m_count = data.size();
-	m_graphicsApi->UploadBufferData(m_bufferID, data, data.size_bytes(), ::graphics_api::IGraphicsApi::BufferType::Index);
+	m_graphicsApi->UploadBufferData(m_bufferID, data.data(), data.size_bytes(), ::graphics_api::IGraphicsApi::BufferType::Index);
 }

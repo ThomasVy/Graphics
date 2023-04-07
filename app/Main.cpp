@@ -38,13 +38,14 @@ int main()
     auto mvp = proj * view * model; //backwards because of column ordering in glm
     VertexBuffer<Vertex2DInfo> vb(graphics.get());
     vb.UploadData(vertices);
-    IndexBuffer ib{indices.data(), indices.size(), graphics.get()};
-    ShaderPipeline shaderPipeline{filesystem.get()};
-    Texture texture{BIN_LOCATION "/textures/ship.png"};
+    IndexBuffer ib(graphics.get());
+    ib.UploadData(indices);
+    ShaderPipeline shaderPipeline(filesystem.get(), graphics.get());
+    Texture texture(BIN_LOCATION "/textures/ship.png");
     texture.Bind();
     shaderPipeline.SetUniform("u_texture", 0);
     shaderPipeline.SetUniform("u_MVP", mvp);
-    Renderer renderer{graphics.get()};
+    Renderer renderer(graphics.get());
     while(!window->ShouldClose())
     {
         renderer.Clear();

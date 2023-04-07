@@ -14,7 +14,8 @@ namespace graphics_api
         void DeleteBuffer(uint32_t bufferId) const override;
         void Clear() const override;
         void SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride) const override;
-
+        int GetUniformLocation(const uint32_t programId, std::string_view uniform) const;
+        void SetUniform(int location, const void * value, uint32_t count, UniformType type) const;
     private: 
         uint32_t m_vertexArray;
     };

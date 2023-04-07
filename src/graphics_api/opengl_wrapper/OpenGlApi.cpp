@@ -10,12 +10,12 @@ namespace {
         std::make_pair(graphics_api::IGraphicsApi::BufferType::Vertex, GL_ARRAY_BUFFER)
     };
 
-    constexpr ConstExprMap BUFFER_TYPE_LOOKUP{BUFFER_TYPE_TO_OPENGL};
+    constexpr common::ConstExprMap BUFFER_TYPE_LOOKUP{BUFFER_TYPE_TO_OPENGL};
 
     constexpr std::array DATA_TYPE_TO_OPENGL{
         std::make_pair(graphics_api::DataType::Float, GL_FLOAT)
     };
-    constexpr ConstExprMap DATA_TYPE_LOOKUP{DATA_TYPE_TO_OPENGL};
+    constexpr common::ConstExprMap DATA_TYPE_LOOKUP{DATA_TYPE_TO_OPENGL};
 }
 
 namespace graphics_api
@@ -80,5 +80,27 @@ namespace graphics_api
         auto type = DATA_TYPE_LOOKUP.at(element.type);
         auto normalized = element.normalized ? GL_TRUE : GL_FALSE;
 		GLCALL(glVertexAttribPointer(index, element.count, type, normalized, stride, (const void *)element.offset));
+    }
+    
+    int OpenGlApi::GetUniformLocation(const uint32_t programId, std::string_view uniform) const
+    {
+        GLCALL(int location = glGetUniformLocation(programId, uniform.data()));
+        return location;
+    }
+    
+    void OpenGlApi::SetUniform(int location, const void * value, uint32_t count, UniformType type) const
+    {
+        switch (type)
+        {
+            case UniformType::Matrix4:
+                GLCALL(glUniformMatrix4fv(location, count, GL_FALSE, static_cast<const GLfloat*>(value)));
+                break;
+            case UniformType::Vec4:
+                GLCALL(glUniform4fv(location, count, static_cast<const GLfloat*>(value)));
+                break;
+            case UniformType::Int32:
+                GLCALL(glUniform1iv(location, count, static_cast<const GLint*>(value)));
+                break;
+        }
     }
 }

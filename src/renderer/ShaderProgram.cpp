@@ -57,8 +57,9 @@ void ShaderProgram::Unbind() const
 	GLCALL(glUseProgram(0));
 }
 
-ShaderProgram::ShaderProgram()
-	: m_programId(glCreateProgram())
+ShaderProgram::ShaderProgram(graphics_api::IGraphicsApi* graphicsApi)
+	: m_graphicsApi(graphicsApi)
+	, m_programId(glCreateProgram())
 {
 }
 
@@ -66,7 +67,7 @@ int ShaderProgram::GetUniformLocation(const std::string& uniformName)
 {
 	if (m_locationCache.contains(uniformName))
 		return m_locationCache.at(uniformName);
-	GLCALL(int location = glGetUniformLocation(m_programId, uniformName.data()));
+	auto location = m_graphicsApi->GetUniformLocation(m_programId, uniformName);
 	if(location == -1)
 		logger::Warn("uniform {} does not exist", uniformName);
 	m_locationCache[uniformName] = location;

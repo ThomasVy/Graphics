@@ -11,7 +11,7 @@ namespace
         std::make_pair<ShaderType, uint32_t>(ShaderType::Vertex, GL_VERTEX_SHADER)
     };
     
-    constexpr auto ENUM_LOOKUP = ConstExprMap(SHADERTYPE_TO_OPENGLENUM);
+    constexpr auto ENUM_LOOKUP = common::ConstExprMap(SHADERTYPE_TO_OPENGLENUM);
     bool CompileShader(const char * shaderSource, GLuint shaderId) {
 
         // compile shader

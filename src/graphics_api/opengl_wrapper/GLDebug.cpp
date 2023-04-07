@@ -19,7 +19,7 @@ void GLClearError()
 
 bool GLLogCall(std::string_view function, std::string_view file, int line)
 {
-    static constexpr auto LOOKUP_MAP = ConstExprMap{ERRORS_LOOKUP};
+    static constexpr auto LOOKUP_MAP = common::ConstExprMap{ERRORS_LOOKUP};
     if(auto error = glGetError(); error != GL_NO_ERROR){
         std::string_view errStr = "Uknown";
         try

@@ -2,6 +2,7 @@
 #pragma once
 #include <memory>
 #include "BufferInfo.h"
+#include <string>
 
 namespace graphics_api
 {
@@ -21,6 +22,15 @@ namespace graphics_api
         virtual void DeleteBuffer(uint32_t bufferId) const = 0;
         virtual void Clear() const = 0;
         virtual void SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride) const = 0;
+        virtual int GetUniformLocation(const uint32_t programId, std::string_view uniform) const = 0;
+
+        enum class UniformType
+        {
+            Matrix4,
+            Vec4,
+            Int32
+        };
+        virtual void SetUniform(int location, const void * value, uint32_t count, UniformType type) const = 0;
     protected:
         IGraphicsApi& operator=(const IGraphicsApi&) = default; 
     };

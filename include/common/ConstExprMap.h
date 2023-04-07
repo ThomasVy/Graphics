@@ -2,7 +2,8 @@
 #include <array>
 #include <algorithm>
 #include <stdexcept>
-
+namespace common
+{
 template <typename Key, typename Value, std::size_t Size>
 struct ConstExprMap {
   std::array<std::pair<Key, Value>, Size> data;
@@ -19,3 +20,4 @@ struct ConstExprMap {
   }
 
 };
+}
