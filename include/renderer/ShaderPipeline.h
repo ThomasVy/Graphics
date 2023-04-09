@@ -4,7 +4,9 @@
 #include "ShaderProgram.h"
 #include "Shader.h"
 #include "graphics_api/IGraphicsApi.h"
-
+#include "Texture.h"
+namespace renderer
+{
 class ShaderPipeline
 {
 public:
@@ -20,3 +22,16 @@ private:
     std::unique_ptr<Shader> m_vertexShader;
     std::unique_ptr<Shader> m_fragmentShader;
 };
+
+void SetTextures(ShaderPipeline& pipeline, std::span<Texture> textures)
+{
+    std::vector<uint32_t> samplers;
+    samplers.reserve(textures.size());
+    for (const auto& texture : textures)
+    {
+        texture.Bind();
+        samplers.push_back(texture.GetImageSlot());
+    }
+    pipeline.SetUniform("u_texture", samplers.data(), static_cast<uint32_t>(samplers.size()) );
+}
+}

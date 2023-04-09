@@ -22,12 +22,10 @@ int main()
     auto filesystem = GetFilesystem();
     auto window = window_context::GetWindow(width, height, "LearnOpenGL");
     auto graphics = graphics_api::GetGraphicsApi(filesystem.get(), graphics_api::GraphicsType::OpenGL, width, height); 
-    
+    auto shaderPipeline = renderer::ShaderPipeline(graphics.get());
     Texture shipTexture(BIN_LOCATION "/textures/ship.png", 0);
     Texture diamondTexture(BIN_LOCATION "/textures/diamond.png", 1);
-    shipTexture.Bind();
-    diamondTexture.Bind();
-
+    renderer::SetTextures(shaderPipeline, {shipTexture, diamondTexture});
     auto ship = renderer::CreateQuad(0.0f, 0.0f, shipTexture);
     auto diamond = renderer::CreateQuad(-0.5f, 0.0f, diamondTexture);
     my_math::mat4 proj = my_math::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
@@ -41,9 +39,7 @@ int main()
 
     IndexBuffer ib(graphics.get());
     ib.UploadData(ship.indices);
-    ShaderPipeline shaderPipeline(graphics.get());
-    std::array samplers { 0, 1 };
-    shaderPipeline.SetUniform("u_texture", samplers.data(), static_cast<uint32_t>(samplers.size()) );
+    
     shaderPipeline.SetUniform("u_MVP", &mvp);
     Renderer renderer(graphics.get());
     while(!window->ShouldClose())
