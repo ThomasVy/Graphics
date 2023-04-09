@@ -22,34 +22,35 @@ int main()
     auto filesystem = GetFilesystem();
     auto window = window_context::GetWindow(width, height, "LearnOpenGL");
     auto graphics = graphics_api::GetGraphicsApi(filesystem.get(), graphics_api::GraphicsType::OpenGL, width, height); 
-    std::array vertices{
-        Vertex2DInfo{.positions={-0.5f, -0.5f}, .textureCoordinates={0.0f, 0.0f}},
-        Vertex2DInfo{.positions={0.5f, -0.5f}, .textureCoordinates={1.0f, 0.0f}},
-        Vertex2DInfo{.positions={0.5f, 0.5f}, .textureCoordinates={1.0f, 1.0f}},
-        Vertex2DInfo{.positions={-0.5f, 0.5f}, .textureCoordinates={0.0f, 1.0f}}
-    };
-    std::array indices{
-        0u,1u,2u,
-        2u,3u,0u
-    };
+    
+    Texture shipTexture(BIN_LOCATION "/textures/ship.png", 0);
+    Texture diamondTexture(BIN_LOCATION "/textures/diamond.png", 1);
+    shipTexture.Bind();
+    diamondTexture.Bind();
+
+    auto ship = renderer::CreateQuad(0.0f, 0.0f, shipTexture);
+    auto diamond = renderer::CreateQuad(-0.5f, 0.0f, diamondTexture);
     my_math::mat4 proj = my_math::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
     my_math::mat4 view{1.0f};
     my_math::mat4 model{1.0f};
     auto mvp = proj * view * model; //backwards because of column ordering in glm
-    VertexBuffer<Vertex2DInfo> vb(graphics.get());
-    vb.UploadData(vertices);
+    VertexBuffer<renderer::Vertex2DInfo> shipVb(graphics.get());
+    shipVb.UploadData(ship.vertexInfo);
+    VertexBuffer<renderer::Vertex2DInfo> diamondVb(graphics.get());
+    diamondVb.UploadData(diamond.vertexInfo);
+
     IndexBuffer ib(graphics.get());
-    ib.UploadData(indices);
+    ib.UploadData(ship.indices);
     ShaderPipeline shaderPipeline(graphics.get());
-    Texture texture(BIN_LOCATION "/textures/ship.png");
-    texture.Bind();
-    shaderPipeline.SetUniform("u_texture", 0);
-    shaderPipeline.SetUniform("u_MVP", mvp);
+    std::array samplers { 0, 1 };
+    shaderPipeline.SetUniform("u_texture", samplers.data(), static_cast<uint32_t>(samplers.size()) );
+    shaderPipeline.SetUniform("u_MVP", &mvp);
     Renderer renderer(graphics.get());
     while(!window->ShouldClose())
     {
         renderer.Clear();
-        renderer.Draw(vb, ib);
+        renderer.Draw(shipVb, ib);
+        renderer.Draw(diamondVb, ib);
         window->SwapBuffers();
         window->PollEvents();
     }

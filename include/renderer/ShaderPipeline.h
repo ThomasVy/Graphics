@@ -11,9 +11,9 @@ public:
     ShaderPipeline(graphics_api::IGraphicsApi* graphicsApi );
     void Recompile();
     template <typename T>
-    void SetUniform(std::string_view uniformName, const T& value, uint32_t count = 1)
+    void SetUniform(std::string_view uniformName, const T* value, uint32_t count = 1)
     {
-        m_shaderProgram->SetUniform(uniformName, &value, count);
+        m_shaderProgram->SetUniform(uniformName, value, count);
     }
 private:
     std::unique_ptr<ShaderProgram> m_shaderProgram;

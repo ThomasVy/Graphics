@@ -18,7 +18,8 @@ namespace {
     constexpr common::ConstExprMap BUFFER_TYPE_LOOKUP{BUFFER_TYPE_TO_OPENGL};
 
     constexpr std::array DATA_TYPE_TO_OPENGL{
-        std::make_pair(graphics_api::DataType::Float, GL_FLOAT)
+        std::make_pair(graphics_api::DataType::Float, GL_FLOAT),
+        std::make_pair(graphics_api::DataType::UInt32, GL_UNSIGNED_INT)
     };
     constexpr common::ConstExprMap DATA_TYPE_LOOKUP{DATA_TYPE_TO_OPENGL};
 
@@ -65,7 +66,7 @@ namespace graphics_api
     {
         auto type = BUFFER_TYPE_LOOKUP.at(bufferType);
         GLCALL(glBindBuffer(type, bufferId));
-        GLCALL(glBufferData(type, size, data, GL_STATIC_DRAW));
+        GLCALL(glBufferData(type, size, data, GL_DYNAMIC_DRAW));
     }
     
     void OpenGlApi::Draw(uint32_t indexBufferId, uint32_t indexCount) const 
@@ -177,7 +178,7 @@ namespace graphics_api
 			std::vector<char> log(logLength);
 			GLCALL(glGetProgramInfoLog(shaderProgramId, logLength, NULL, log.data()));
 
-			logger::Error("SHADER_PROGRAM linking {}\n", log.data());
+			logger::Error("SHADER_PROGRAM linking");
             return;
 		}
         GLCALL(glUseProgram(shaderProgramId));

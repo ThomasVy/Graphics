@@ -5,7 +5,8 @@ namespace graphics_api
 {
     enum class DataType
     {
-        Float
+        Float,
+        UInt32
     };
 
     struct BufferInfo

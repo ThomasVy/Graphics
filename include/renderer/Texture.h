@@ -4,18 +4,17 @@
 class Texture
 {
 public:
-    Texture(std::string path);
+    Texture(std::string path, uint32_t slot);
     ~Texture();
 
-    void Bind(uint32_t slot = 0) const;
-    void Unbind() const;
-
+    void Bind() const;
     int GetWidth() const {return m_width;}
     int GetHeight() const { return m_height; }
-
+    inline uint32_t GetImageSlot() const {return m_imageSlot;}
+    
 private:
     uint32_t m_textureId;
     std::string m_filePath;
-    uint8_t* m_localBuffer;
     int m_width, m_height, m_bitsPerPixel;
+    uint32_t m_imageSlot;
 };

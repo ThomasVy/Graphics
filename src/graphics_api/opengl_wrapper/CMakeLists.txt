@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.25)
 
 add_library(opengl_wrapper GLDebug.cpp OpenGlApi.cpp)
 find_package(GLEW REQUIRED)
-target_link_libraries(opengl_wrapper PRIVATE compiler_flags GLEW::GLEW common logger)
+target_link_libraries(opengl_wrapper PRIVATE compiler_flags common logger PUBLIC GLEW::GLEW)
 target_include_directories(opengl_wrapper INTERFACE "${PROJECT_SOURCE_DIR}/include" PRIVATE "${PROJECT_SOURCE_DIR}/include/graphics_api/opengl_wrapper" PUBLIC
 "${PROJECT_BINARY_DIR}")
 
