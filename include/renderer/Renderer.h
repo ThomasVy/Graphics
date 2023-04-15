@@ -13,7 +13,7 @@ public:
     template<typename T>
     void Draw(const VertexBuffer<T>& vertexBuffer, const IndexBuffer& indexBuffer) const
     {
-        vertexBuffer.Bind();
+        vertexBuffer.Bind(0);
         m_graphicsApi->Draw(indexBuffer.GetId(), indexBuffer.GetCount());
     }
 private:

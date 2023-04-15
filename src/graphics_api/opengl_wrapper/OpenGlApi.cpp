@@ -85,13 +85,14 @@ namespace graphics_api
         GLCALL(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    void OpenGlApi::SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride) const
+    void OpenGlApi::SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride ) const
     {
         GLCALL(glBindBuffer(GL_ARRAY_BUFFER, bufferId));
         GLCALL(glEnableVertexAttribArray(index));
         auto type = DATA_TYPE_LOOKUP.at(element.type);
         auto normalized = element.normalized ? GL_TRUE : GL_FALSE;
 		GLCALL(glVertexAttribPointer(index, element.count, type, normalized, stride, (const void *)element.offset));
+        GLCALL(glVertexAttribDivisor(index, element.divisor));
     }
     
     int OpenGlApi::GetUniformLocation(const uint32_t programId, std::string_view uniform) const

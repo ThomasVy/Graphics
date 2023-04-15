@@ -13,6 +13,7 @@ namespace graphics_api
     {
         uint64_t offset;
         uint32_t count;
+        uint32_t divisor;
         DataType type; 
         bool normalized;
     };

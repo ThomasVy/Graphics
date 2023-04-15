@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include "math/MatrixAndVectorMath.h"
 #include "ShaderProgram.h"
 #include "Shader.h"
@@ -23,15 +24,5 @@ private:
     std::unique_ptr<Shader> m_fragmentShader;
 };
 
-void SetTextures(ShaderPipeline& pipeline, std::span<Texture> textures)
-{
-    std::vector<uint32_t> samplers;
-    samplers.reserve(textures.size());
-    for (const auto& texture : textures)
-    {
-        texture.Bind();
-        samplers.push_back(texture.GetImageSlot());
-    }
-    pipeline.SetUniform("u_texture", samplers.data(), static_cast<uint32_t>(samplers.size()) );
-}
+void SetTextures(ShaderPipeline& pipeline, const std::vector<Texture*>& textures);
 }

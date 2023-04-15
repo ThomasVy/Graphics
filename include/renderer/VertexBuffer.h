@@ -26,14 +26,18 @@ public:
 		m_graphicsApi->UploadBufferData(m_bufferID, data.data(), data.size_bytes(), graphics_api::IGraphicsApi::BufferType::Vertex);
 	}
 	
-	void Bind() const
+	//bindings the layout starting at the starting index 
+	//returns the ending index
+	uint32_t Bind(uint32_t startingIndex) const
 	{
 		const auto layout = T::GetLayout();
-		for (auto i = 0u; i < layout.size(); ++i)
+		auto i = startingIndex;
+		for (const auto& element : layout)
 		{
-			const auto &element = layout[i];
 			m_graphicsApi->SetBufferLayout(m_bufferID, i, element, sizeof(T));
+			++i;
 		}
+		return i;
 	}
 	
 	uint32_t GetId() const { return m_bufferID;}

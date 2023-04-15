@@ -6,7 +6,7 @@ class Texture
 public:
     Texture(std::string path, uint32_t slot);
     ~Texture();
-
+    Texture(const Texture&) = delete;
     void Bind() const;
     int GetWidth() const {return m_width;}
     int GetHeight() const { return m_height; }
