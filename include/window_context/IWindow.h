@@ -10,6 +10,7 @@ namespace window_context
         virtual bool ShouldClose() = 0;
 		virtual void SwapBuffers() = 0;
         virtual void PollEvents() = 0;
+        virtual void SwitchVSync(bool condition) = 0;
     protected:
         IWindow& operator=(const IWindow&) = default; 
     };

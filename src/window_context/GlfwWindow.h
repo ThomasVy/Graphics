@@ -16,6 +16,7 @@ namespace window_context
 		bool ShouldClose() override;
 		void SwapBuffers() override;
 		void PollEvents() override;
+		void SwitchVSync(bool condition) override;
 	private:
 		std::unique_ptr<GLFWwindow, decltype([](GLFWwindow* window) {glfwDestroyWindow(window);})> m_glfwWindow;
 		std::unique_ptr<GlfwCallbacks> m_callbacks;

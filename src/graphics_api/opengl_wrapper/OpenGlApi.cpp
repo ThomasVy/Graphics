@@ -85,14 +85,14 @@ namespace graphics_api
         GLCALL(glClear(GL_COLOR_BUFFER_BIT));
     }
 
-    void OpenGlApi::SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride ) const
+    void OpenGlApi::SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride, bool isPerInstance ) const
     {
         GLCALL(glBindBuffer(GL_ARRAY_BUFFER, bufferId));
         GLCALL(glEnableVertexAttribArray(index));
         auto type = DATA_TYPE_LOOKUP.at(element.type);
         auto normalized = element.normalized ? GL_TRUE : GL_FALSE;
 		GLCALL(glVertexAttribPointer(index, element.count, type, normalized, stride, (const void *)element.offset));
-        GLCALL(glVertexAttribDivisor(index, element.divisor));
+        GLCALL(glVertexAttribDivisor(index, isPerInstance ? 1 : 0 ));
     }
     
     int OpenGlApi::GetUniformLocation(const uint32_t programId, std::string_view uniform) const
@@ -202,5 +202,11 @@ namespace graphics_api
         }
         std::optional<std::string> shaderSource = m_filesystem->ReadFile(filePath);        
         return shaderSource;
+    }
+    
+    void OpenGlApi::DrawInstanced(uint32_t indexBufferId, uint32_t numberOfIndices, uint32_t numberOfInstances)
+    {
+        GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId));
+        GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, nullptr, numberOfInstances));
     }
 }

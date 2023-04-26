@@ -7,102 +7,48 @@
 
 namespace renderer
 {
-    struct Vertex2DInfo
-    {
-        my_math::vec3 positions;
-        my_math::vec2 textureCoordinates;
-        float textureId;
-        my_math::mat4 model;
-
-        static constexpr auto GetLayout()
-        {
-            return std::array{
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, positions),
-                    .count = 3,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false},
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, textureCoordinates),
-                    .count = 2,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false},
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, textureId),
-                    .count =1,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, model),
-                    .count =4,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, model) + sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, model) + 2*sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Vertex2DInfo, model) + 3*sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=0,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                }
-            };
-        }
-    };
     namespace instancing
     {
-        struct Vertex2DInfo
+        struct Vec3
         {
-            my_math::vec2 positions;
-            my_math::vec2 textureCoordinates;
-
+            my_math::vec3 vec3;
             static constexpr auto GetLayout()
             {
                 return std::array{
                     graphics_api::BufferInfo{
-                        .offset = offsetof(Vertex2DInfo, positions),
-                        .count = 2,
-                        .divisor=0,
-                        .type = graphics_api::DataType::Float,
-                        .normalized = false},
-                    graphics_api::BufferInfo{
-                        .offset = offsetof(Vertex2DInfo, textureCoordinates),
-                        .count = 2,
-                        .divisor=0,
+                        .offset = offsetof(Vec3, vec3),
+                        .count =3,
                         .type = graphics_api::DataType::Float,
                         .normalized = false}
                 };
             }
         };
 
-        struct Texture
+        struct Vec2
         {
-            float textureId;
+            my_math::vec2 vec2;
+
+            static constexpr auto GetLayout()
+            {
+                return std::array{ 
+                    graphics_api::BufferInfo{
+                    .offset = offsetof(Vec2, vec2),
+                    .count =2,
+                    .type = graphics_api::DataType::Float,
+                    .normalized = false}
+                };
+            }
+        };
+
+        struct Vec1
+        {
+            float vec1;
             static constexpr auto GetLayout()
             {
                 return std::array{
                     graphics_api::BufferInfo{
-                        .offset = offsetof(Texture, textureId),
+                        .offset = offsetof(Vec1, vec1),
                         .count =1,
-                        .divisor=1,
                         .type = graphics_api::DataType::Float,
                         .normalized = false
                     }
@@ -110,62 +56,66 @@ namespace renderer
             }
         };
 
-        struct Model
-    {
-        my_math::mat4 model;
-        static constexpr auto GetLayout()
+        struct Matrix
         {
-            return std::array{
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Model, model),
-                    .count =4,
-                    .divisor=1,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Model, model)+sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=1,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Model, model)+2*sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=1,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                },
-                graphics_api::BufferInfo{
-                    .offset = offsetof(Model, model)+3*sizeof(my_math::vec4),
-                    .count =4,
-                    .divisor=1,
-                    .type = graphics_api::DataType::Float,
-                    .normalized = false
-                }
+            my_math::mat4 matrix;
+            static constexpr auto GetLayout()
+            {
+                return std::array{
+                    graphics_api::BufferInfo{
+                        .offset = offsetof(Matrix, matrix),
+                        .count =4,
+                        .type = graphics_api::DataType::Float,
+                        .normalized = false
+                    },
+                    graphics_api::BufferInfo{
+                        .offset = offsetof(Matrix, matrix)+sizeof(my_math::vec4),
+                        .count =4,
+                        .type = graphics_api::DataType::Float,
+                        .normalized = false
+                    },
+                    graphics_api::BufferInfo{
+                        .offset = offsetof(Matrix, matrix)+2*sizeof(my_math::vec4),
+                        .count =4,
+                        .type = graphics_api::DataType::Float,
+                        .normalized = false
+                    },
+                    graphics_api::BufferInfo{
+                        .offset = offsetof(Matrix, matrix)+3*sizeof(my_math::vec4),
+                        .count =4,
+                        .type = graphics_api::DataType::Float,
+                        .normalized = false
+                    }
+                };
+            }
+        };
+
+        struct InstanceQuad
+        {
+            std::array<Vec3, 4> positions;
+            std::array<Vec2, 4> textureCoords;
+            std::array<uint32_t, 6> indices;
+        };
+
+        inline InstanceQuad CreateQuad(float x, float y)
+        {
+            static constexpr float SIZE = 1.0f;
+            static constexpr float HALF_SIZE = SIZE/2;
+            Vec3 bottomLeft{ .vec3={x-HALF_SIZE, y-HALF_SIZE, 0.0f}};
+            Vec2 bottomLeftTextCoord{ .vec2={0.0f, 0.0f}};
+            Vec3 topRight{ .vec3={x+HALF_SIZE, y+HALF_SIZE, 0.0f}};
+            Vec2 topRightTextCoord = { .vec2={1.0f, 1.0f}};
+            Vec3 topLeft{ .vec3={x-HALF_SIZE, y+HALF_SIZE, 0.0f}};
+            Vec2 topLeftTextCoord{ .vec2={0.0f, 1.0f}};
+            Vec3 bottomRight{ .vec3={x+HALF_SIZE, y-HALF_SIZE, 0.0f}};
+            Vec2 bottomRightTextCoord{ .vec2={1.0f, 0.0f}};
+
+            return InstanceQuad{
+                .positions={std::move(bottomLeft),  std::move(bottomRight), std::move(topRight), std::move(topLeft)},
+                .textureCoords={std::move(bottomLeftTextCoord), std::move(bottomRightTextCoord), std::move(topRightTextCoord), std::move(topLeftTextCoord)},
+                .indices={0u,1u,2u,2u,3u,0u}
             };
         }
-    };
+
     } // namespace instanced
-
-struct Quad {
-    std::array<Vertex2DInfo, 4> vertexInfo;
-    std::array<uint32_t, 6> indices;
-};
-
-inline Quad CreateQuad(float x, float y, const Texture& texture)
-{
-    static constexpr float SIZE = 1.0f;
-    static constexpr float HALF_SIZE = SIZE/2;
-    Vertex2DInfo bottomLeft{.positions = {x-HALF_SIZE, y-HALF_SIZE, 0.0f}, .textureCoordinates = {0.0f, 0.0f}, .textureId = static_cast<float>(texture.GetImageSlot()), .model=my_math::mat4{1.0f}};
-    Vertex2DInfo bottomRight{.positions = {x+HALF_SIZE, y-HALF_SIZE, 0.0f}, .textureCoordinates = {1.0f, 0.0f}, .textureId = static_cast<float>(texture.GetImageSlot()), .model=my_math::mat4{1.0f}};
-    Vertex2DInfo topRight{ .positions = {x+HALF_SIZE, y+HALF_SIZE, 0.0f}, .textureCoordinates = {1.0f, 1.0f}, .textureId = static_cast<float>(texture.GetImageSlot()), .model=my_math::mat4{1.0f}};
-    Vertex2DInfo topLeft{ .positions = {x-HALF_SIZE, y+HALF_SIZE, 0.0f}, .textureCoordinates = {0.0f, 1.0f}, .textureId = static_cast<float>(texture.GetImageSlot()), .model=my_math::mat4{1.0f}};
-
-    return Quad{
-        .vertexInfo={std::move(bottomLeft), std::move(bottomRight), std::move(topRight), std::move(topLeft)},
-        .indices={ 0u,1u,2u, 2u,3u,0u }
-    };
-}
 } // namespace renderer

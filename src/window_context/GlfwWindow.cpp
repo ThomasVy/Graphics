@@ -20,7 +20,6 @@ namespace window_context
 	    }
         m_callbacks = std::make_unique<GlfwCallbacks>(m_glfwWindow.get());
 	    glfwMakeContextCurrent(m_glfwWindow.get());
-        glfwSwapInterval(1);
     }
 
     bool GlfwWindow::ShouldClose()
@@ -41,5 +40,10 @@ namespace window_context
     void GlfwWindow::PollEvents()
     {
         glfwPollEvents();
+    }
+    
+    void GlfwWindow::SwitchVSync(bool condition)
+    {
+        glfwSwapInterval(condition ? 1 : 0);
     }
 }
