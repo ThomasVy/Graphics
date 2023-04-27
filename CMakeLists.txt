@@ -25,6 +25,7 @@ configure_file(res/textures/ship.png textures/ship.png COPYONLY)
 configure_file(res/textures/diamond.png textures/diamond.png COPYONLY)
 configure_file(res/textures/fire.png textures/fire.png COPYONLY)
 
+add_subdirectory(thirdparty)
 add_subdirectory(src)
 add_subdirectory(app)
 

@@ -1,7 +1,9 @@
 #pragma once
 #include <memory>
 #include <string_view>
-namespace window_context
+#include "ICallbacks.h"
+#include <span>
+namespace io
 {
     class IWindow
     {
@@ -9,7 +11,6 @@ namespace window_context
         virtual ~IWindow() = default;
         virtual bool ShouldClose() = 0;
 		virtual void SwapBuffers() = 0;
-        virtual void PollEvents() = 0;
         virtual void SwitchVSync(bool condition) = 0;
     protected:
         IWindow& operator=(const IWindow&) = default; 

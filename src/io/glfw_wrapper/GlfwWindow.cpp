@@ -1,8 +1,8 @@
 #include "GlfwWindow.h"
 #include "logger/Log.h"
 #include <stdexcept>
-
-namespace window_context
+#include "GlfwCallbacks.h"
+namespace glfw_wrapper
 {
     GlfwWindow::GlfwWindow(const int width, const int height, std::string_view windowTitle)
     { 
@@ -18,7 +18,6 @@ namespace window_context
             logger::Error("WINDOW failed to create GLFW window");
             throw std::runtime_error("Failed to create GLFW window.");
 	    }
-        m_callbacks = std::make_unique<GlfwCallbacks>(m_glfwWindow.get());
 	    glfwMakeContextCurrent(m_glfwWindow.get());
     }
 
@@ -37,11 +36,6 @@ namespace window_context
         glfwTerminate();
     }
 
-    void GlfwWindow::PollEvents()
-    {
-        glfwPollEvents();
-    }
-    
     void GlfwWindow::SwitchVSync(bool condition)
     {
         glfwSwapInterval(condition ? 1 : 0);

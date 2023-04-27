@@ -6,6 +6,8 @@ GameObject::GameObject(float scale, my_math::vec3 position, float heading)
     : m_scale(scale)
     , m_position(std::move(position))
     , m_heading(heading)
+    , m_xVelocity(0.0f)
+    , m_yVelocity(0.0f)
 {
 }
 
@@ -18,10 +20,25 @@ my_math::mat4 GameObject::GetModel() const
     return model;
 }
 
-void GameObject::Update(window_context::Timestep timestep)
+void GameObject::Update(float timestep)
 {
-    
+    m_position.x += timestep * m_xVelocity;
+    m_position.y += timestep * m_yVelocity;
 }
 
+void GameObject::SetXVelocity(float velocity)
+{
+    m_xVelocity = velocity;
+}
 
+void GameObject::SetYVelocity(float velocity)
+{
+    m_yVelocity = velocity;
+}
+
+void ClearVelocity(GameObject& object)
+{
+    object.SetXVelocity(0.0f);
+    object.SetYVelocity(0.0f);
+}
 } // namespace game

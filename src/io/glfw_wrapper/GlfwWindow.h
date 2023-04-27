@@ -4,21 +4,19 @@
 #include <string>
 #include "IWindow.h"
 #include "GLFW/glfw3.h"
-#include "GlfwCallbacks.h"
 
-namespace window_context
+namespace glfw_wrapper
 {
-	class GlfwWindow : public IWindow
+	class GlfwWindow : public io::IWindow
 	{
 	public:
 		GlfwWindow(const int width, const int height, std::string_view windowTitle);
 		~GlfwWindow();
 		bool ShouldClose() override;
 		void SwapBuffers() override;
-		void PollEvents() override;
 		void SwitchVSync(bool condition) override;
+		GLFWwindow* GetRawGlfwWindow() { return m_glfwWindow.get(); }
 	private:
 		std::unique_ptr<GLFWwindow, decltype([](GLFWwindow* window) {glfwDestroyWindow(window);})> m_glfwWindow;
-		std::unique_ptr<GlfwCallbacks> m_callbacks;
 	};
 }
