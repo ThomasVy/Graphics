@@ -18,10 +18,10 @@ public:
         m_graphicsApi->Draw(indexBuffer.GetId(), indexBuffer.GetCount());
     }
 
-    void DrawInstance(const renderer::Instance& instances) const
+    void DrawInstance(const renderer::Instance& instance) const
     {
-        instances.Bind();
-        m_graphicsApi->DrawInstanced(instances.GetIndexBufferId(), instances.GetIndicesCount(), instances.GetInstanceCount());
+        instance.Bind();
+        m_graphicsApi->DrawInstanced(instance.GetIndexBufferId(), instance.GetIndicesCount(), instance.GetInstanceCount());
     }
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;

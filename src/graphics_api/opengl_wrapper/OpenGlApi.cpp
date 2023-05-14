@@ -114,6 +114,9 @@ namespace graphics_api
             case UniformType::Int32:
                 GLCALL(glUniform1iv(location, count, static_cast<const GLint*>(value)));
                 break;
+            case UniformType::UInt32:
+                GLCALL(glUniform1uiv(location, count, static_cast<const GLuint*>(value)));
+                break;
         }
     }
     

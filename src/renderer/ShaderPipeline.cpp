@@ -26,7 +26,6 @@ void SetTextures(ShaderPipeline& pipeline, const std::vector<Texture*>& textures
     samplers.reserve(textures.size());
     for (const auto& texture : textures)
     {
-        texture->Bind();
         samplers.push_back((int)texture->GetImageSlot());
     }
     pipeline.SetUniform("u_texture", samplers.data(), static_cast<uint32_t>(samplers.size()) );

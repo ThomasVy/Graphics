@@ -21,25 +21,29 @@ GlfwTextDisplay::~GlfwTextDisplay()
     ImGui::DestroyContext();
 }
 
+static void RenderFPSCounter()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoScrollbar;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoCollapse;
+    window_flags |= ImGuiWindowFlags_NoBackground;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+    ImGui::Begin("FPS Counter", nullptr, window_flags);                          // Create a window called "Hello, world!" and append into it.
+    ImGui::Text("%.1f FPS (%.3f ms)", io.Framerate, 1000.0f / io.Framerate);
+    ImGui::End();
+}
 
 void GlfwTextDisplay::Render()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-    ImGuiIO& io = ImGui::GetIO();
     {   
-        ImGuiWindowFlags window_flags = 0;
-        window_flags |= ImGuiWindowFlags_NoTitleBar;
-        window_flags |= ImGuiWindowFlags_NoScrollbar;
-        window_flags |= ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoCollapse;
-        window_flags |= ImGuiWindowFlags_NoBackground;
-        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Hello, world!", nullptr, window_flags);                          // Create a window called "Hello, world!" and append into it.
-        ImGui::Text("%.1f FPS (%.3f ms)", io.Framerate, 1000.0f / io.Framerate);
-        ImGui::End();
-
+        RenderFPSCounter();
         //ImGui::ShowDemoWindow();
     }
     //Do all the things?

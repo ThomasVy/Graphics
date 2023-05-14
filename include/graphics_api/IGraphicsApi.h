@@ -30,7 +30,8 @@ namespace graphics_api
         {
             Matrix4,
             Vec4,
-            Int32
+            Int32,
+            UInt32
         };
         virtual void SetUniform(int location, const void * value, uint32_t count, UniformType type) const = 0;
 

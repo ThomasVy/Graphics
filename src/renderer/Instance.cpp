@@ -1,18 +1,19 @@
 #include "Instance.h"
 namespace renderer
 {
-Instance::Instance(graphics_api::IGraphicsApi* graphicsApi)
-    : m_indexBuffer(graphicsApi)
+Instance::Instance(graphics_api::IGraphicsApi* graphicsApi, ShaderPipeline* pipeline)
+    : m_pipeline(pipeline)
+    , m_indexBuffer(graphicsApi)
     , m_positionsBuffer(graphicsApi, 0, false)
     , m_textureCoordinatesBuffer(graphicsApi, 1, false)
-    , m_textureIdBuffer(graphicsApi, 2, true)
-    , m_modelsBuffer(graphicsApi, 3, true)
+    , m_modelsBuffer(graphicsApi, 2, true)
+    , m_textureId(0)
 {
 }
 
-void Instance::SetTexturesIds(std::span<instancing::Vec1> data)
+void Instance::SetTextureId(uint32_t textureId)
 {
-    m_textureIdBuffer.UploadData(data);
+    m_textureId = textureId;
 }
 
 void Instance::SetModels(std::span<instancing::Matrix> data)
@@ -34,8 +35,8 @@ void Instance::Bind() const
 {
     m_positionsBuffer.Bind();
     m_textureCoordinatesBuffer.Bind();
-    m_textureIdBuffer.Bind();
     m_modelsBuffer.Bind();
+    m_pipeline->SetUniform("u_texId", &m_textureId);
 }
 
 uint32_t Instance::GetIndicesCount() const

@@ -5,9 +5,9 @@ class Texture
 {
 public:
     Texture(std::string path, uint32_t slot);
+    Texture(std::string path1, std::string path2);
     ~Texture();
     Texture(const Texture&) = delete;
-    void Bind() const;
     int GetWidth() const {return m_width;}
     int GetHeight() const { return m_height; }
     inline uint32_t GetImageSlot() const {return m_imageSlot;}

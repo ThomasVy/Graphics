@@ -11,6 +11,9 @@ public:
     void Update(float timestep);
     void SetXVelocity(float velocity);
     void SetYVelocity(float velocity);
+    inline my_math::vec3 GetPosition() const {
+        return m_position * m_scale;
+    }
 private:
     float m_scale;
     my_math::vec3 m_position;

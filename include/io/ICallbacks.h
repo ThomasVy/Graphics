@@ -15,6 +15,8 @@ namespace io
         virtual void WindowSizeCallback(int width, int height) = 0;
         virtual void PollEvents() = 0;
         virtual void SetValidKeys(const std::span<std::string_view> validKeys) = 0;
+        virtual double GetScrollDelta() = 0;
+        virtual void Clear() = 0;
         virtual ~ICallbacks() = default;
     protected:
         ICallbacks& operator=(const ICallbacks&) = default; 

@@ -16,7 +16,16 @@ namespace glfw_wrapper
         bool IsKeyHeld(std::string_view key) override;
         void SetValidKeys(const std::span<std::string_view> validKeys) override;
         void PollEvents() override;
+        void Clear() override
+        {
+            m_scrollDelta = 0.0f;
+        }
+        inline double GetScrollDelta() override
+        {
+            return m_scrollDelta;
+        }
     private:
+        double m_scrollDelta = 0.0f;
         std::unordered_map<int, bool> m_keyMap;
     };
 }

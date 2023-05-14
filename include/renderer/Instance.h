@@ -3,15 +3,16 @@
 #include "Vertex2DInfo.h"
 #include <span>
 #include "IndexBuffer.h"
+#include "ShaderPipeline.h"
 
 namespace renderer
 {
 class Instance
 {
 public:
-    Instance(graphics_api::IGraphicsApi* graphicsApi);
+    Instance(graphics_api::IGraphicsApi* graphicsApi, ShaderPipeline* pipeline);
 
-    void SetTexturesIds(std::span<instancing::Vec1> data);
+    void SetTextureId(uint32_t textureId);
     void SetModels(std::span<instancing::Matrix> data);
     void SetPositions(std::span<instancing::Vec3> data);
     void SetTextureCoordinates(std::span<instancing::Vec2> data);
@@ -22,10 +23,11 @@ public:
     uint32_t GetIndexBufferId() const;
     void Bind() const;
 private:
+    ShaderPipeline* m_pipeline;
     IndexBuffer m_indexBuffer;
     VertexBuffer<instancing::Vec3> m_positionsBuffer;
     VertexBuffer<instancing::Vec2> m_textureCoordinatesBuffer;
-    VertexBuffer<instancing::Vec1> m_textureIdBuffer;
     VertexBuffer<instancing::Matrix> m_modelsBuffer;
+    uint32_t m_textureId;
 };
 } // namespace renderer

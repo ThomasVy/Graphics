@@ -40,16 +40,16 @@ namespace renderer
             }
         };
 
-        struct Vec1
+        struct UInt
         {
-            float vec1;
+            uint32_t integer;
             static constexpr auto GetLayout()
             {
                 return std::array{
                     graphics_api::BufferInfo{
-                        .offset = offsetof(Vec1, vec1),
+                        .offset = offsetof(UInt, integer),
                         .count =1,
-                        .type = graphics_api::DataType::Float,
+                        .type = graphics_api::DataType::UInt32,
                         .normalized = false
                     }
                 };

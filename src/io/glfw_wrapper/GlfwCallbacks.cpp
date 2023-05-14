@@ -75,7 +75,7 @@ namespace glfw_wrapper
     
     void GlfwCallbacks::ScrollCallback(double xoffset, double yoffset)
     {
-        
+        m_scrollDelta = yoffset;
     }
 
     void GlfwCallbacks::WindowSizeCallback(int width, int height)
