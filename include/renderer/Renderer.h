@@ -14,7 +14,7 @@ public:
     void Clear() const;
 
     void DrawEntity(const renderer::IEntity& object);
-    void DrawEntities(const std::vector<renderer::IEntity*>& entities);
+    void DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities);
 
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;

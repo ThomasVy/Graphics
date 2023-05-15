@@ -44,7 +44,16 @@ int main()
     auto quadShape = renderer::CreateQuad(graphics.get(), 0.0f, 0.0f);
     
     auto shipObject = game::GameObject(quadShape, shipTexture, 0.5f, my_math::vec3{0.0f, 0.0f, 0.0f}, 0.0f);
-    auto diamondObject = game::GameObject(quadShape, diamondTexture, 0.5f, my_math::vec3{0.0f, 1.0f, 0.0f}, 0.0f);
+    std::vector<std::unique_ptr<renderer::IEntity>> diamondObjects{};
+
+    for (int i = -50; i < 50; i++)
+    {
+        for (int j = -50 ; j < 50; j++)
+        {
+            diamondObjects.push_back(std::make_unique<game::GameObject>(quadShape, diamondTexture, 0.5f, my_math::vec3{i, j, 0.0f}, i+j));
+        } 
+    }
+    
 
     float aspect = float(WINDOW_WIDTH)/float(WINDOW_HEIGHT);
     renderer::Renderer renderer(graphics.get(), &shaderPipeline);
@@ -86,8 +95,8 @@ int main()
         auto pv = proj * view; //backwards because of column ordering in glm
         shaderPipeline.SetUniform("u_PV", &pv);
 
+        renderer.DrawEntities(diamondObjects); 
         renderer.DrawEntity(shipObject); 
-        renderer.DrawEntity(diamondObject); 
 
         textDisplay.Render();
         controls.Clear();

@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "IndexBuffer.h"
+#include <memory>
 
 namespace renderer
 {
@@ -27,19 +28,19 @@ void Renderer::DrawEntity(const renderer::IEntity& object)
     m_graphicsApi->DrawInstanced(object.GetShape().indexBuffer.GetCount(), 1);
 }
 
-void Renderer::DrawEntities(const std::vector<renderer::IEntity*>& entities)
+void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities)
 {
     if(entities.empty())
         return;
 
-    const auto* sampleObject = entities[0];
+    const auto& sampleObject = entities[0];
     sampleObject->GetShape().Bind();
     auto textureId = sampleObject->GetTextureId();
     m_shaderPipeline->SetUniform("u_texId", &textureId);
 
     auto models = std::vector<Matrix>();
     models.reserve(entities.size());
-    for (const auto* object : entities)
+    for (const auto& object : entities)
     {
         models.emplace_back(object->GetModel());
     }

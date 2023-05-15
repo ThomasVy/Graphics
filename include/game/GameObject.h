@@ -12,7 +12,7 @@ public:
     void SetXVelocity(float velocity);
     void SetYVelocity(float velocity);
     inline my_math::vec3 GetPosition() const {
-        return m_position * m_scale;
+        return m_position;
     }
     my_math::mat4 GetModel() const override;
     const renderer::Shape& GetShape() const override;
