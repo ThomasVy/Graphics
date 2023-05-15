@@ -1,28 +1,24 @@
 #pragma once
 #include "VertexBuffer.h"
-#include "IndexBuffer.h"
 #include "ShaderPipeline.h"
 #include "graphics_api/IGraphicsApi.h"
-#include "Instance.h"
+#include <vector>
+#include "IEntity.h"
 
+namespace renderer
+{
 class Renderer 
 {
 public:
-    Renderer(graphics_api::IGraphicsApi* graphicsApi);
+    Renderer(graphics_api::IGraphicsApi* graphicsApi, renderer::ShaderPipeline* shaderPipeline);
     void Clear() const;
 
-    template<typename T>
-    void Draw(const VertexBuffer<T>& vertexBuffer, const IndexBuffer& indexBuffer) const
-    {
-        vertexBuffer.Bind(0);
-        m_graphicsApi->Draw(indexBuffer.GetId(), indexBuffer.GetCount());
-    }
+    void DrawEntity(const renderer::IEntity& object);
+    void DrawEntities(const std::vector<renderer::IEntity*>& entities);
 
-    void DrawInstance(const renderer::Instance& instance) const
-    {
-        instance.Bind();
-        m_graphicsApi->DrawInstanced(instance.GetIndexBufferId(), instance.GetIndicesCount(), instance.GetInstanceCount());
-    }
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;
+    renderer::ShaderPipeline* m_shaderPipeline;
+    VertexBuffer<Matrix> m_modelsBuffer;
 };
+}

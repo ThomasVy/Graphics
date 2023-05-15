@@ -22,3 +22,8 @@ void IndexBuffer::UploadData(std::span<uint32_t> data)
     m_count = data.size();
 	m_graphicsApi->UploadBufferData(m_bufferID, data.data(), data.size_bytes(), ::graphics_api::IGraphicsApi::BufferType::Index);
 }
+
+void IndexBuffer::Bind() const
+{
+	m_graphicsApi->BindIndexBuffer(m_bufferID);
+}

@@ -48,7 +48,8 @@ namespace graphics_api
         virtual void DeleteShaderProgram(uint32_t shaderProgramId ) const = 0;
         virtual void LinkShaders(uint32_t shaderProgramId, const std::vector<uint32_t>& shaderIds) const = 0;
         virtual std::optional<std::string> ReadShaderSourceFile(ShaderType shaderType) = 0;
-        virtual void DrawInstanced(uint32_t indexBufferId, uint32_t numberOfIndices, uint32_t numberOfInstances) = 0;
+        virtual void DrawInstanced(uint32_t numberOfIndices, uint32_t numberOfInstances) = 0;
+        virtual void BindIndexBuffer(uint32_t indexBufferId) const = 0;
     protected:
         IGraphicsApi& operator=(const IGraphicsApi&) = default; 
     };

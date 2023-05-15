@@ -25,7 +25,8 @@ namespace graphics_api
         void DeleteShaderProgram(uint32_t shaderProgramId ) const override;
         void LinkShaders(uint32_t shaderProgramId, const std::vector<uint32_t>& shaderIds) const override;
         std::optional<std::string> ReadShaderSourceFile(ShaderType shaderType) override;
-        void DrawInstanced(uint32_t indexBufferId, uint32_t numberOfIndices, uint32_t numberOfInstances) override;
+        void DrawInstanced(uint32_t numberOfIndices, uint32_t numberOfInstances) override;
+        void BindIndexBuffer(uint32_t indexBufferId) const;
     private: 
         uint32_t m_vertexArray;
         IFilesystem* m_filesystem;

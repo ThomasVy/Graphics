@@ -20,7 +20,7 @@ public:
 		, m_isPerInstance(isPerInstance)
 	{
 	}
-
+	
     ~VertexBuffer()
 	{
 		m_graphicsApi->DeleteBuffer(m_bufferID);

@@ -207,9 +207,13 @@ namespace graphics_api
         return shaderSource;
     }
     
-    void OpenGlApi::DrawInstanced(uint32_t indexBufferId, uint32_t numberOfIndices, uint32_t numberOfInstances)
+    void OpenGlApi::DrawInstanced(uint32_t numberOfIndices, uint32_t numberOfInstances)
+    {
+        GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, nullptr, numberOfInstances));
+    }
+    
+    void OpenGlApi::BindIndexBuffer(uint32_t indexBufferId) const
     {
         GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId));
-        GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, nullptr, numberOfInstances));
     }
 }

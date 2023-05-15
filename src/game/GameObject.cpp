@@ -2,8 +2,10 @@
 
 namespace game
 {
-GameObject::GameObject(float scale, my_math::vec3 position, float heading)
-    : m_scale(scale)
+GameObject::GameObject(const renderer::Shape& shape, const Texture& texture, float scale, my_math::vec3 position, float heading)
+    : m_shape(shape)
+    , m_texture(texture)
+    , m_scale(scale)
     , m_position(std::move(position))
     , m_heading(heading)
     , m_xVelocity(0.0f)
@@ -18,6 +20,11 @@ my_math::mat4 GameObject::GetModel() const
     model = my_math::rotate(model, m_heading, my_math::vec3(0.0f, 0.0f, 1.0f));
     model = my_math::translate(model, m_position);
     return model;
+}
+
+const renderer::Shape& GameObject::GetShape() const 
+{
+    return m_shape;
 }
 
 void GameObject::Update(float timestep)
@@ -41,4 +48,10 @@ void ClearVelocity(GameObject& object)
     object.SetXVelocity(0.0f);
     object.SetYVelocity(0.0f);
 }
+
+uint32_t GameObject::GetTextureId() const 
+{
+    return m_texture.GetImageSlot();
+}
+
 } // namespace game
