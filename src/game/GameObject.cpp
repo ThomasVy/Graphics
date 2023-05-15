@@ -17,8 +17,8 @@ my_math::mat4 GameObject::GetModel() const
 {
     auto model = my_math::mat4(1.0f);
     model = my_math::translate(model, m_position);
-    model = my_math::scale(model, my_math::vec3(m_scale, m_scale, 1.0f)); //scale
     model = my_math::rotate(model, m_heading, my_math::vec3(0.0f, 0.0f, 1.0f));
+    model = my_math::scale(model, my_math::vec3(m_scale, m_scale, 1.0f)); //scale
     return model;
 }
 

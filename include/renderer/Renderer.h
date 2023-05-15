@@ -15,7 +15,7 @@ public:
 
     void DrawEntity(const renderer::IEntity& object);
     void DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities);
-
+    void SetViewProj(const my_math::mat4& viewProjMatrix);
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;
     renderer::ShaderPipeline* m_shaderPipeline;

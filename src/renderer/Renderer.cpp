@@ -48,4 +48,10 @@ void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>
     m_modelsBuffer.Bind();
     m_graphicsApi->DrawInstanced(sampleObject->GetShape().indexBuffer.GetCount(), (uint32_t)entities.size());
 }
+
+void Renderer::SetViewProj(const my_math::mat4& viewProjMatrix)
+{
+    m_shaderPipeline->SetUniform("u_PV", &viewProjMatrix);
+}
+
 }
