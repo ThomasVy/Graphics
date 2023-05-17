@@ -24,6 +24,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 configure_file(res/textures/ship.png textures/ship.png COPYONLY)
 configure_file(res/textures/diamond.png textures/diamond.png COPYONLY)
 configure_file(res/textures/fire.png textures/fire.png COPYONLY)
+configure_file(res/textures/tilemap_packed.png textures/tilemap_packed.png COPYONLY)
 
 add_subdirectory(thirdparty)
 add_subdirectory(src)

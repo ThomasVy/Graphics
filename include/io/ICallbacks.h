@@ -9,6 +9,7 @@ namespace io
     public:
         virtual void KeyCallback(int key, int scancode, int action, int mods) {}
         virtual bool IsKeyHeld(std::string_view key) = 0;
+        virtual bool WasKeyPressed(std::string_view key) = 0;
         virtual void MouseButtonCallback(int button, int action, int mods) {}
         virtual void CursorPosCallback(double xpos, double ypos) {}
         virtual void ScrollCallback(double xoffset, double yoffset) {}

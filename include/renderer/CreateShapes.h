@@ -4,5 +4,6 @@
 
 namespace renderer
 {
-    Shape CreateQuad(graphics_api::IGraphicsApi* graphicsApi, float centerX, float centerY);
+    Shape CreateQuad(graphics_api::IGraphicsApi* graphicsApi);
+    Shape CreateQuadSpriteSheet(graphics_api::IGraphicsApi* graphicsApi);
 } // namespace renderer

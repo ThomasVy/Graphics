@@ -38,7 +38,8 @@ namespace
         std::make_pair("A"sv, GLFW_KEY_A),
         std::make_pair("S"sv, GLFW_KEY_S),
         std::make_pair("W"sv, GLFW_KEY_W),
-        std::make_pair("D"sv, GLFW_KEY_D)
+        std::make_pair("D"sv, GLFW_KEY_D),
+        std::make_pair("Q"sv, GLFW_KEY_Q)
     };
 
     constexpr common::ConstExprMap KEY_LOOKUP{
@@ -104,5 +105,15 @@ namespace glfw_wrapper
     void GlfwCallbacks::PollEvents()
     {
         glfwPollEvents();
+    }
+    
+    bool GlfwCallbacks::WasKeyPressed(std::string_view key)
+    {
+        auto glfwKey = KEY_LOOKUP.at(key);
+        if (!m_keyMap.contains(glfwKey))
+            return false;
+        auto res = m_keyMap[glfwKey];
+        m_keyMap[glfwKey] = false;
+        return res;
     }
 } // namespace 

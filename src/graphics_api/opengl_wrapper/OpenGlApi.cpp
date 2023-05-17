@@ -47,6 +47,7 @@ namespace graphics_api
         GLCALL(glEnable(GL_BLEND));
         GLCALL(glGenVertexArrays(1, &m_vertexArray));
         GLCALL(glBindVertexArray(m_vertexArray));
+        
         logger::Info("OPENGL Version {}\n", (char*)glGetString(GL_VERSION));
     }
     

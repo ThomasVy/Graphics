@@ -19,6 +19,7 @@ public:
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;
     renderer::ShaderPipeline* m_shaderPipeline;
+     VertexBuffer<Vec2> m_textureCoordinatesBuffer;
     VertexBuffer<Matrix> m_modelsBuffer;
 };
 }

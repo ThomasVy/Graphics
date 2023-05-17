@@ -8,6 +8,7 @@ namespace renderer
 Renderer::Renderer(graphics_api::IGraphicsApi* graphicsApi, renderer::ShaderPipeline* shaderPipeline)
     : m_graphicsApi{graphicsApi}
     , m_shaderPipeline(shaderPipeline)
+    , m_textureCoordinatesBuffer{graphicsApi, 1, false}
     , m_modelsBuffer(m_graphicsApi, 2, true)
 {
 }
@@ -20,10 +21,19 @@ void Renderer::Clear() const
 void Renderer::DrawEntity(const renderer::IEntity& object)
 {
     auto textureId = object.GetTextureId();
+    if (textureId == -1)
+    {
+        logger::Error("Texture is null");
+        return;
+    }
     m_shaderPipeline->SetUniform("u_texId", &textureId);
+    auto textCoords = object.TextureCoords();
+    m_textureCoordinatesBuffer.UploadData(textCoords);
+    m_textureCoordinatesBuffer.Bind();
+    object.GetShape().Bind();
+
     auto models = std::array<Matrix, 1>{object.GetModel()};
     m_modelsBuffer.UploadData(models);
-    object.GetShape().Bind();
     m_modelsBuffer.Bind();
     m_graphicsApi->DrawInstanced(object.GetShape().indexBuffer.GetCount(), 1);
 }
@@ -34,9 +44,14 @@ void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>
         return;
 
     const auto& sampleObject = entities[0];
-    sampleObject->GetShape().Bind();
     auto textureId = sampleObject->GetTextureId();
+    if (textureId == -1)
+    {
+        logger::Error("Texture is null");
+        return;
+    }
     m_shaderPipeline->SetUniform("u_texId", &textureId);
+    sampleObject->GetShape().Bind();
 
     auto models = std::vector<Matrix>();
     models.reserve(entities.size());
@@ -44,6 +59,9 @@ void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>
     {
         models.emplace_back(object->GetModel());
     }
+    auto textCoords = sampleObject->TextureCoords();
+    m_textureCoordinatesBuffer.UploadData(textCoords);
+    m_textureCoordinatesBuffer.Bind();
     m_modelsBuffer.UploadData(models);
     m_modelsBuffer.Bind();
     m_graphicsApi->DrawInstanced(sampleObject->GetShape().indexBuffer.GetCount(), (uint32_t)entities.size());

@@ -77,19 +77,16 @@ namespace renderer
     struct Shape
     {
         VertexBuffer<Vec3> positionsBuffer;
-        VertexBuffer<Vec2> textureCoordinatesBuffer;
         IndexBuffer indexBuffer;
 
         Shape(graphics_api::IGraphicsApi* graphicsApi)
         : positionsBuffer{graphicsApi, 0, false}
-        , textureCoordinatesBuffer{graphicsApi, 1, false}
         , indexBuffer{graphicsApi}
         {}
 
         void Bind() const
         {
             positionsBuffer.Bind();
-            textureCoordinatesBuffer.Bind();
             indexBuffer.Bind();
         }
     };
