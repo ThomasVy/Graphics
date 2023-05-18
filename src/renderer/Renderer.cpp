@@ -18,7 +18,7 @@ void Renderer::Clear() const
     m_graphicsApi->Clear();
 }
 
-void Renderer::DrawEntity(const renderer::IEntity& object)
+void Renderer::DrawEntity(const renderer::IEntity& object, bool showWireFrame)
 {
     auto textureId = object.GetTextureId();
     if (textureId == -1)
@@ -35,10 +35,10 @@ void Renderer::DrawEntity(const renderer::IEntity& object)
     auto models = std::array<Matrix, 1>{object.GetModel()};
     m_modelsBuffer.UploadData(models);
     m_modelsBuffer.Bind();
-    m_graphicsApi->DrawInstanced(object.GetShape().indexBuffer.GetCount(), 1);
+    m_graphicsApi->DrawInstanced(m_shaderPipeline->GetProgramId(), object.GetShape().indexBuffer.GetCount(), 1, showWireFrame);
 }
 
-void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities)
+void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities, bool showWireFrame)
 {
     if(entities.empty())
         return;
@@ -64,7 +64,7 @@ void Renderer::DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>
     m_textureCoordinatesBuffer.Bind();
     m_modelsBuffer.UploadData(models);
     m_modelsBuffer.Bind();
-    m_graphicsApi->DrawInstanced(sampleObject->GetShape().indexBuffer.GetCount(), (uint32_t)entities.size());
+    m_graphicsApi->DrawInstanced(m_shaderPipeline->GetProgramId(), sampleObject->GetShape().indexBuffer.GetCount(), (uint32_t)entities.size(), showWireFrame);
 }
 
 void Renderer::SetViewProj(const my_math::mat4& viewProjMatrix)

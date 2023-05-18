@@ -20,7 +20,6 @@ namespace graphics_api
         virtual ~IGraphicsApi() = default;
         virtual uint32_t GenerateBuffers() const = 0;
         virtual void UploadBufferData(uint32_t bufferId, const void * data, uint64_t size, BufferType bufferType) const = 0;
-        virtual void Draw(uint32_t indexBufferId, uint32_t indexCount) const = 0;
         virtual void DeleteBuffer(uint32_t bufferId) const = 0;
         virtual void Clear() const = 0;
         virtual void SetBufferLayout(const uint32_t bufferId, const uint32_t index, const BufferInfo& element, uint32_t stride, bool isPerInstance) const = 0;
@@ -48,7 +47,7 @@ namespace graphics_api
         virtual void DeleteShaderProgram(uint32_t shaderProgramId ) const = 0;
         virtual void LinkShaders(uint32_t shaderProgramId, const std::vector<uint32_t>& shaderIds) const = 0;
         virtual std::optional<std::string> ReadShaderSourceFile(ShaderType shaderType) = 0;
-        virtual void DrawInstanced(uint32_t numberOfIndices, uint32_t numberOfInstances) = 0;
+        virtual void DrawInstanced(uint32_t programId, uint32_t numberOfIndices, uint32_t numberOfInstances, bool wireFrameMode) = 0;
         virtual void BindIndexBuffer(uint32_t indexBufferId) const = 0;
     protected:
         IGraphicsApi& operator=(const IGraphicsApi&) = default; 

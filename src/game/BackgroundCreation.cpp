@@ -12,9 +12,9 @@ namespace game
         std::span<const renderer::SubTexture> floorTiles)
     {
         auto floorObjects = std::vector<std::unique_ptr<renderer::IEntity>>{};
-        for (float i = -15; i < 15; i += 0.45f)
+        for (float i = -15; i < 15; i += 0.5f)
         {
-            for (float j = -15; j < 15; j += 0.45f)
+            for (float j = -15; j < 15; j += 0.5f)
             {
                 auto randomIndex = math::integer::Random(0, (int)floorTiles.size() - 1);
                 floorObjects.push_back(std::make_unique<game::GameObject>(

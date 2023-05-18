@@ -18,6 +18,11 @@ public:
     {
         m_shaderProgram->SetUniform(uniformName, value, count);
     }
+    
+    uint32_t GetProgramId() const
+    {
+        return m_shaderProgram->GetShaderProgramId();
+    }
 private:
     std::unique_ptr<ShaderProgram> m_shaderProgram;
     std::unique_ptr<Shader> m_vertexShader;

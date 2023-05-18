@@ -81,6 +81,7 @@ int main()
     camera.FollowObject(&player);
     camera.SetProjection(my_math::perspective(glm::radians(45.0f), aspect, 0.01f, 1000.f));
     //my_math::ortho(-1.0f, 1.0f, -0.75f, 0.75f, -1.0f, 1.0f);
+    bool wireFrameMode = false;
     while(!window.ShouldClose())
     {
         renderer.Clear(); //has to be at the top
@@ -107,18 +108,19 @@ int main()
         }
         if (controls.WasKeyPressed("Q"))
         {
-            knightIndex++;
-            knightIndex %= 2;
-            player.SetTexture(&knightTextures[knightIndex]);
+            // knightIndex++;
+            // knightIndex %= 2;
+            // player.SetTexture(&knightTextures[knightIndex]);
+            wireFrameMode = !wireFrameMode;
         }
 
         player.Update(timeElapsed);
         camera.Update(timeElapsed);
 
         renderer.SetViewProj(camera.GetViewProjectionMatrix());
-        renderer.DrawEntities(floorObjects); 
-        renderer.DrawEntity(player); 
-        //renderer.DrawEntity(batObject); 
+        renderer.DrawEntities(floorObjects, wireFrameMode); 
+        renderer.DrawEntity(player, wireFrameMode); 
+        // renderer.DrawEntity(batObject, true); 
 
         textDisplay.Render();
         controls.Clear();

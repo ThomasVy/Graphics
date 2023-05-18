@@ -70,12 +70,6 @@ namespace graphics_api
         GLCALL(glBufferData(type, size, data, GL_DYNAMIC_DRAW));
     }
     
-    void OpenGlApi::Draw(uint32_t indexBufferId, uint32_t indexCount) const 
-    {
-        GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferId));
-        GLCALL(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
-    }
-    
     void OpenGlApi::DeleteBuffer(uint32_t bufferId) const 
     {
         GLCALL(glDeleteBuffers(1, &bufferId));
@@ -208,9 +202,22 @@ namespace graphics_api
         return shaderSource;
     }
     
-    void OpenGlApi::DrawInstanced(uint32_t numberOfIndices, uint32_t numberOfInstances)
-    {
+    void OpenGlApi::DrawInstanced(uint32_t programId, uint32_t numberOfIndices, uint32_t numberOfInstances, bool wireFrameMode)
+    { 
         GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, nullptr, numberOfInstances));
+        if (wireFrameMode)
+        {
+            uint32_t useSolidColor = 1;
+            auto location = GetUniformLocation(programId, "u_useSolidColor");
+            GLCALL(glUniform1ui(location, useSolidColor));
+            GLCALL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
+
+            GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_INT, nullptr, numberOfInstances));
+
+            useSolidColor = 0;
+            GLCALL(glUniform1ui(location, useSolidColor));
+            GLCALL(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
+        }
     }
     
     void OpenGlApi::BindIndexBuffer(uint32_t indexBufferId) const

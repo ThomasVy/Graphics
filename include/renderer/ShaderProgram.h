@@ -50,6 +50,10 @@ public:
         m_graphicsApi->SetUniform(location, my_math::value_ptr(*value), count, graphics_api::IGraphicsApi::UniformType::Matrix4);
     }
 
+    uint32_t GetShaderProgramId() const
+    {
+        return m_programId;
+    }
 private:
     int GetUniformLocation(const std::string& uniformName);
 

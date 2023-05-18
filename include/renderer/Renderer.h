@@ -13,8 +13,8 @@ public:
     Renderer(graphics_api::IGraphicsApi* graphicsApi, renderer::ShaderPipeline* shaderPipeline);
     void Clear() const;
 
-    void DrawEntity(const renderer::IEntity& object);
-    void DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities);
+    void DrawEntity(const renderer::IEntity& object, bool showWireFrame);
+    void DrawEntities(const std::vector<std::unique_ptr<renderer::IEntity>>& entities, bool showWireFrame);
     void SetViewProj(const my_math::mat4& viewProjMatrix);
 private:
     graphics_api::IGraphicsApi* m_graphicsApi;
