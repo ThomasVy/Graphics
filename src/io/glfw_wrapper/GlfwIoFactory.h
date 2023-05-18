@@ -14,7 +14,7 @@ public:
     GlfwIoFactory(const int width, const int height, std::string_view windowTitle); 
     ~GlfwIoFactory();
     io::IWindow& GetWindow() override;
-    io::ICallbacks& GetControls(const std::span<std::string_view> validKeys) override;
+    io::ICallbacks& GetControls() override;
     io::ITextDisplay& GetTextDisplay() override;
     void Refresh() override;
     io::ITimer& GetTimer() override;

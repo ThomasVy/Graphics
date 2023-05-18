@@ -23,9 +23,8 @@ io::IWindow& GlfwIoFactory::GetWindow()
     return *m_window;
 }
 
-io::ICallbacks& GlfwIoFactory::GetControls(const std::span<std::string_view> validKeys)
+io::ICallbacks& GlfwIoFactory::GetControls()
 {
-    m_callbacks->SetValidKeys(validKeys);
     return *m_callbacks;
 }
 

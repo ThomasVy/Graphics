@@ -17,17 +17,11 @@
 #include "renderer/CreateShapes.h"
 #include "game/Camera.h"
 #include "game/BackgroundCreation.h"
+#include "game/TextWindows.h"
 
-static constexpr float SPEED = 1.0f;
+static constexpr float DEFAULT_SPEED = 1.0f;
 static constexpr int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 using namespace std::string_view_literals;
-static std::array CONTROLS { 
-    "W"sv,
-    "A"sv,
-    "S"sv,
-    "D"sv,
-    "Q"sv
-};
 
 int main()
 {
@@ -35,9 +29,12 @@ int main()
     auto ioFactory = io::GetIoFactory(WINDOW_WIDTH, WINDOW_HEIGHT, "LearnOpenGL");
     auto& window = ioFactory->GetWindow();
     window.SwitchVSync(true);
-    auto& controls = ioFactory->GetControls(CONTROLS);
+    auto& controls = ioFactory->GetControls();
     auto& timer = ioFactory->GetTimer();
     auto& textDisplay = ioFactory->GetTextDisplay();
+    textDisplay.AddTextWindow(1, game::RenderFPSCounter);
+    textDisplay.AddTextWindow(2, game::RenderControlsHelp);
+
     auto graphics = graphics_api::GetGraphicsApi(filesystem.get(), graphics_api::GraphicsType::OpenGL, WINDOW_WIDTH, WINDOW_HEIGHT); 
     auto shaderPipeline = renderer::ShaderPipeline(graphics.get());
 
@@ -50,7 +47,6 @@ int main()
 
     auto shipTexture = renderer::SubTexture(shipSheet, {0.0f, 0.0f});
     auto diamondTexture = renderer::SubTexture(diamondSheet, {0.0f, 0.0f});
-    auto batTexture = renderer::SubTexture(spriteTextureSheet, {0.0f, 0.0f});
 
     auto knightTextures = std::array{
         renderer::SubTexture(spriteTextureSheet, {1.0f, 2.0f}),
@@ -69,7 +65,6 @@ int main()
     
 
     auto floorObjects = game::GenerateFloorTiles(quadShape, sandFloorTiles);
-    auto batObject = game::GameObject(quadShape, &batTexture, 0.5f, my_math::vec3{0.0f, 0.0f, 0.0f}, 0.0f);
     auto player = game::GameObject(quadShape, &knightTextures[knightIndex], 0.5f, my_math::vec3{0.0f, 0.0f, 0.0f}, 0.0f);
     std::vector<std::unique_ptr<renderer::IEntity>> backgroundTiles{};
 
@@ -82,6 +77,7 @@ int main()
     camera.SetProjection(my_math::perspective(glm::radians(45.0f), aspect, 0.01f, 1000.f));
     //my_math::ortho(-1.0f, 1.0f, -0.75f, 0.75f, -1.0f, 1.0f);
     bool wireFrameMode = false;
+    float playerSpeed = DEFAULT_SPEED;
     while(!window.ShouldClose())
     {
         renderer.Clear(); //has to be at the top
@@ -90,28 +86,35 @@ int main()
         camera.AddZoom(scrollValue);
 
         game::ClearVelocity(player);
+        if (controls.IsKeyHeld("LEFT_SHIFT"))
+        {
+            playerSpeed *= 2.0;
+        }
         if (controls.IsKeyHeld("W"))
         {
-            player.SetYVelocity(SPEED);
+            player.SetYVelocity(playerSpeed);
         }
         if (controls.IsKeyHeld("S"))
         {
-            player.SetYVelocity(-SPEED);
+            player.SetYVelocity(-playerSpeed);
         }
         if (controls.IsKeyHeld("A"))
         {
-            player.SetXVelocity(-SPEED);
+            player.SetXVelocity(-playerSpeed);
         }
         if (controls.IsKeyHeld("D"))
         {
-            player.SetXVelocity(SPEED);
+            player.SetXVelocity(playerSpeed);
         }
         if (controls.WasKeyPressed("Q"))
         {
-            // knightIndex++;
-            // knightIndex %= 2;
-            // player.SetTexture(&knightTextures[knightIndex]);
             wireFrameMode = !wireFrameMode;
+        }
+        if (controls.WasKeyPressed("E"))
+        {
+            knightIndex++;
+            knightIndex %= 2;
+            player.SetTexture(&knightTextures[knightIndex]);
         }
 
         player.Update(timeElapsed);
@@ -120,9 +123,9 @@ int main()
         renderer.SetViewProj(camera.GetViewProjectionMatrix());
         renderer.DrawEntities(floorObjects, wireFrameMode); 
         renderer.DrawEntity(player, wireFrameMode); 
-        // renderer.DrawEntity(batObject, true); 
 
-        textDisplay.Render();
+        playerSpeed = DEFAULT_SPEED;
+        textDisplay.RenderTextWindows();
         controls.Clear();
         ioFactory->Refresh();
     }

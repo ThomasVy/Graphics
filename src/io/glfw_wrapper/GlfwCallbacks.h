@@ -14,7 +14,6 @@ namespace glfw_wrapper
         void ScrollCallback(double xoffset, double yoffset) override;
         void WindowSizeCallback(int width, int height) override;
         bool IsKeyHeld(std::string_view key) override;
-        void SetValidKeys(const std::span<std::string_view> validKeys) override;
         void PollEvents() override;
         bool WasKeyPressed(std::string_view key) override;
         void Clear() override

@@ -13,7 +13,7 @@ class IoFactory
 public:
     virtual ~IoFactory() = default;
     virtual IWindow& GetWindow() = 0;
-    virtual ICallbacks& GetControls(const std::span<std::string_view> validKeys) = 0;
+    virtual ICallbacks& GetControls() = 0;
     virtual ITimer& GetTimer() = 0;
     virtual ITextDisplay& GetTextDisplay() = 0;
     virtual void Refresh() = 0;

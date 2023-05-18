@@ -33,17 +33,16 @@ namespace
         callbacks->WindowSizeCallback(width, height);
     }
     using namespace std::string_view_literals;
-    constexpr std::array LETTER_TO_GLFW_KEY
-    {
-        std::make_pair("A"sv, GLFW_KEY_A),
-        std::make_pair("S"sv, GLFW_KEY_S),
-        std::make_pair("W"sv, GLFW_KEY_W),
-        std::make_pair("D"sv, GLFW_KEY_D),
-        std::make_pair("Q"sv, GLFW_KEY_Q)
-    };
-
     constexpr common::ConstExprMap KEY_LOOKUP{
-        LETTER_TO_GLFW_KEY
+        std::array{
+            std::make_pair("A"sv, GLFW_KEY_A),
+            std::make_pair("S"sv, GLFW_KEY_S),
+            std::make_pair("W"sv, GLFW_KEY_W),
+            std::make_pair("D"sv, GLFW_KEY_D),
+            std::make_pair("Q"sv, GLFW_KEY_Q),
+            std::make_pair("E"sv, GLFW_KEY_E),
+            std::make_pair("LEFT_SHIFT"sv, GLFW_KEY_LEFT_SHIFT)
+        }
     };
 }
 
@@ -63,9 +62,6 @@ namespace glfw_wrapper
 
     void GlfwCallbacks::KeyCallback(int key, int scancode, int action, int mods)
     {
-        if (!m_keyMap.contains(key))
-            return;
-
         if (action == GLFW_PRESS) {
 			m_keyMap[key] = true;
 		}
@@ -90,16 +86,6 @@ namespace glfw_wrapper
         if (!m_keyMap.contains(glfwKey))
             return false;
         return m_keyMap[glfwKey];
-    }
-    
-    void GlfwCallbacks::SetValidKeys(const std::span<std::string_view> validKeys)
-    {
-        m_keyMap.clear();
-        for (const auto key : validKeys)
-        {
-            auto glfwKey = KEY_LOOKUP.at(key);
-            m_keyMap[glfwKey] = false;
-        }
     }
     
     void GlfwCallbacks::PollEvents()
